@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+</head>
+<body>
+<form action="/like/" method="POST" class="px-3">
+    <input type="hidden" name="csrfmiddlewaretoken"
+           value="fjlgs0nGp9k4IJ3KkA4bwp5Ql3qaNYqyIxMcn2E9ou21suRPWRy7KYeq2R82DzwX">
+    <input type="hidden" name="post_id" value="3">
+
+    <button class="btn">like<i class="bi-hand-thumbs-up" id="like"></i></button>
+
+
+</form>
+{%for dim in file1%}
+<div class="col-lg-4 mb-5">
+                    <div class="card h-100 shadow border-0">
+                        <img class="card-img-top" src="{{item.image.url}}" alt="..." height="250"
+                             width="250">
+                        <div class="card-body p-4">
+                            <a class="text-decoration-none link-dark stretched-link"
+                               href="{%url 'blog_detail' item.id %}">
+                                <div class="h5 card-title mb-3">{{item.title}}</div>
+                            </a>
+                            <!--                            <p class="card-text mb-0">{{item.article|safe}}</p>-->
+                            <p><a href="{%url 'blog_detail' item.id %}" style="text-decoration:none;">read <i
+                                    class="fas fa-eye"></i></a></p>
+                        </div>
+                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                            <div class="d-flex align-items-end justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle me-3"
+                                         src="{%static 'assets/images/profile.png' %}" alt="..." height="39"
+                                         width="39">
+                                    <div class="small">
+                                        <div class="fw-bold">{{item.author}}</div>
+                                        <div class="text-muted">{{item.created|date:'D d M Y'}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    <p>{{file1.name}}</p>
+{%endfor%}
+</body>
+</html>

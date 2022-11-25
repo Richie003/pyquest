@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+{%extends 'navs/nav.html' %}
+{%block content%}
+{%load myfilters%}
+{%load static%}
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{%static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{%static 'assets/css/album.css' %}" rel="stylesheet">
+    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+        var user_pk = {{bios.pk}}
+    </script>
+</head>
+<style>
+.btn-icon-split {
+    padding: 0;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: stretch;
+    justify-content: center;
+}
+    .btn-icon-split .icon {
+    background: rgb(233 225 225 / 18%);
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+}
+.btn-icon-split .text {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+}
+
+
+
+        .bg-modal, .bg-modal2, .bg-modal3{
+        width:100%;
+        height:100%;
+        z-index:1;
+        background-color: rgb(0 0 0 / 96%)!important;
+        position:fixed;
+        left:0;
+        top:0;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        display:none;
+    }
+    .modal-content{
+        background: #4a4a4b00;
+        width:500px!important;
+        height:300px!important;
+        text-align: center!important;
+        position:relative;
+    }
+    .close{
+        position:absolute!important;
+        top:0!important;
+        right:14px;
+        font-size:41px;
+        transform:rotate(45deg);
+        cursor:pointer!important;
+    }
+    .close:hover{
+        color:red;
+        position:absolute!important;
+        top:0!important;
+        right:14px;
+        font-size:41px;
+        transform:rotate(19deg);
+        cursor:pointer!important;
+    }
+span#follow-count {
+    margin-left: 8rem !important;
+    margin-bottom: 1rem !important;
+}
+
+</style>
+<body class="bg-light h-100">
+<div class="card text-center px-5 py-5 bg-light" style="border:0px solid #fff">
+    <!--    <div class="card-header">-->
+    <!--        <small class="text-muted">Py|Quest...</small>-->
+    <!--    </div>-->
+    <div class="card-body bg-light">
+        <div class="d-flex justify-content-center align-items-center">
+            <img class="img-fluid rounded-circle" src="{{bios.display_photo.url}}" alt="..." width="150" height="250"
+                 style="width:18vh; height:16vh; object-fit:cover;">
+            {%if bios.user == request.user %}
+            <div class="mt-5 edit-bio position-absolute l-5 pl-5 ml-5">
+                <a class="btn btn-sm btn-secondary rounded">
+                    <i class="bi bi-person-edit"></i>
+                </a>
+            </div>
+            {%endif%}
+            <!--            <p>{{active}}</p>-->
+            {%if bios.user != request.user %}
+            {%if active %}
+                <div class="mt-5 edit-bio position-absolute l-5 pl-5 ml-5">
+                    <i class="bi bi-person-circle text-success"></i>
+                </div>
+                {%endif%}
+            {%endif%}
+        </div>
+        <div class="text-center">
+            <h5 class="card-title fw-bolder fs-5 my-2">{{bios.user|capfirst}}</h5>
+            {%if bios.description%}
+            <div class="fs-5 mb-4 fst-italic px-3 py-2">{{bios.description|capfirst}}</div>
+            {%else%}
+            {%if bios.user == request.user %}
+            <div class="fs-5 mb-4 fst-italic">Your Bio appears here when you add one</div>
+            {%else%}
+            <div class="fs-5 mb-4 fst-italic">{{bios.user}} hasn't written a bio yet.</div>
+            {%endif%}
+            {%endif%}
+
+
+        </div>
+        {%if bios.user == request.user %}
+        <a href="https://www.facebook.com/sharer/share.php?u={{request.build_absolute_uri}}{{stringed}}" class="btn btn-sm btn-dark btn-icon-split">
+                    <span class="icon text-white-50">
+                      <i class="bi bi-link"></i>
+                    </span>
+            <span class="text">Link</span>
+        </a>
+        <button class="btn btn-sm btn-dark btn-icon-split">
+                    <span class="icon text-white-50">
+                      <i class="bi bi-person"></i>
+                    </span>
+            <span class="text">following</span>
+            <span class="position-absolute rounded-circle bg-info px-1 ml-5" id="follow-count">
+                <small class="px-1">{{bios.following.all.count}}</small>
+            </span>
+        </button>
+        {%else%}
+        <form action="" method="POST" class="follow-form" id="{{bios.id}}">
+            {%csrf_token%}
+            <input type="hidden" class="form-control lg-3" name="follow_id" value="{{bios.id}}">
+            <button class="btn btn-sm btn-dark btn-icon-split" onclick="followClick(this, '{{bios.user}}')">
+                {%if not follow%}
+                <span class="icon text-white-50">
+                              <i class="bi bi-person-plus" id="icon"></i>
+                            </span>
+                <span class="text follow-btn{{bios.id}}" id="span_text">
+                    Follow
+                </span>
+                    {%else%}
+                    <span class="icon text-white-50">
+                      <i class="bi bi-person-dash" id="icon"></i>
+                    </span>
+                    <span class="text follow-btn{{bios.id}}" id="span_text">
+                        Unfollow
+                        {%endif%}
+                    </span>
+            </button>
+
+            <!--            <button class="btn btn-sm btn-dark btn-icon-split unfollow-btn{{bios.id}}">-->
+            <!--                    <span class="icon text-white-50">-->
+            <!--                      <i class="fas fa-user-minus"></i>-->
+            <!--                    </span>-->
+            <!--                    <span class="text">Unfollow</span>-->
+            <!--                  </button>-->
+        </form>
+        {%endif%}
+        <!--        <div class="d-flex justify-content-center align-items-center mt-3">-->
+        <!--            <div class="info">-->
+        <!--                <h6 class="px-2"><b>Followers</b></h6>-->
+        <!--                <p class="text-muted">0</p>-->
+        <!--            </div>-->
+        <!--            <div class="info">-->
+        <!--                <h6 class="px-2"><b>Following</b></h6>-->
+        <!--                <p class="text-muted">{{bios.friend.all.count}}</p>-->
+        <!--            </div>-->
+        <!--            <div class="info">-->
+        <!--                <h6 class="px-2"><b>Posts</b></h6>-->
+        <!--                <p class="text-muted">{{posts.count}}</p>-->
+        <!--            </div>-->
+        <!--        </div>-->
+    </div>
+    <!--    <div class="card-footer text-muted">-->
+    <!--        2 days ago-->
+    <!--    </div>-->
+</div>
+<main role="main">
+    <div class="album py-5 bg-light border-top">
+        <div class="container">
+
+            <div class="row">
+                {%for post in blog%}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="{{post.image.url}}" alt="" class="img card-img-top" width="250" height="250" style="object-fit:cover;">
+                        <div class="card-body">
+                            <p class="card-text fw-bolder fs-5"><a href="{%url 'blog_detail' post.id%}"
+                                                                   class="stretched-link text-decoration-none"
+                                                                   style="color:#000;">{{post.title|capfirst}} <i
+                                    class="bi bi-eye text-muted"></i></a></p>
+                            <div class="d-flex">
+                                <p class="text-muted font-weight-bold"><i
+                                        class="bi bi-heart mx-1 text-muted font-weight-normal"></i>{{post.liked.all.count}}like{{post.liked.all|pluralize}}
+                                    <i class="bi bi-comments mx-1 text-muted font-weight-normal"></i>{{post.comments.count}}comment(s)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+</main>
+{%if blog >= 1%}
+<div class="text-end mb-5 mb-xl-0 px-4">
+            <ul class="pagination">
+                {%if blog.has_previous%}
+                <li class="page-item">
+                    <a href="?page={{blog.previous_page_number }}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
+                       class="page-link text-decoration-none" aria-label="Previous">
+                        <i class="fas fa-angle-left text-warning"></i>
+                    </a>
+                </li>
+                {%endif%}
+                <li class="page-item">
+                    <span role="banner" class="page-link text-decoration-none" style="color:#777;">Page {{ blog.number }} of {{ blog.paginator.num_pages }}</span>
+                </li>
+                {%if blog.has_next%}
+                <li class="page-item">
+                    <a href="?page={{blog.next_page_number}}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
+                       class="page-link text-decoration-none" aria-label="Next">
+                        <i class="fas fa-angle-right text-warning"></i>
+                    </a>
+                </li>
+                {%endif%}
+            </ul>
+        </div>
+{%endif%}
+<div class="bg-modal2 rounded py-3 px-3" id="share-post">
+    <div class="modal-content py-2 px-3 border-0">
+        <div class="close text-light" onclick="cancelClicker(this)">+</div>
+        <i class="bi bi-person mb-5 text-light" style="font-size:210%; color:#757577;"></i>
+        <strong class="fw-bold text-light" id="mssg"></strong>
+    </div>
+</div>
+</body>
+</html>
+{%endblock%}
+
+{%block scripts%}
+<script src="{%static 'assets/js/scripts.js' %}"></script>
+<script>
+</script>
+<script src="{%static 'assets/js/follow_user.js' %}"></script>
+{%endblock scripts%}
+
+<!--TODO: publisher should be able to classify posts under a serie-->

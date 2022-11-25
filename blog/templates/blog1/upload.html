@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Upload</title>
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+    <!--
+
+    Template 2108 Dashboard
+
+	http://www.tooplate.com/view/2108-dashboard
+
+    -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <!-- https://fonts.google.com/specimen/Open+Sans -->
+    <link rel="stylesheet" href="{%static 'assets/css/fontawesome.min.css' %}">
+    <!-- https://fontawesome.com/ -->
+    <!--    <link rel="stylesheet" href="{%static 'assets/jquery-ui-datepicker/jquery-ui.min.css' %}" type="text/css"/>-->
+    <!-- http://api.jqueryui.com/datepicker/ -->
+    <link rel="stylesheet" href="{%static 'assets/css/bootstrap.min.css' %}">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="{%static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{%static 'assets/css/semantic.css' %}">
+</head>
+<body class="text-center">
+    <form class="ui form px-4 py-5" method="POST" action="" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="field px-4">
+            {{form.media}}
+        </div>
+  <div class="field">
+    {{form.title}}
+  </div>
+  <div class="field">
+    {{form.descripion}}
+  </div>
+  <div class="field">
+    {{form.article}}
+  </div>
+  <div class="ui checkbox">
+    {{form.blog_tag}}
+  </div>
+  <div class="field">
+    {{form.image}}
+  </div>
+  <button class="ui button" type="submit">Post</button>
+</form>
+<!--<form id="contactForm" method="POST" action="" enctype="multipart/form-data" class="px-3 py-5 d-flex align-center justify-content-left">-->
+<!--    {%csrf_token%}-->
+<!--    <div class="input-group mb-3 px-3 py-3" id="inputG1">-->
+<!--        {{form.media}}-->
+<!--    </div>-->
+<!--    <h1 class="h3 mb-3 font-weight-normal" id="big-text">Update your content</h1>-->
+<!--    <div class="input-group mb-3 px-5 py-3" id="inputG2">-->
+<!--        <label for="id_title" class="sr-only">Title:</label>-->
+<!--        {{form.title}}-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3 px-5 py-3" id="inputG3">-->
+<!--        <label for="id_description" class="sr-only">Description:</label>-->
+<!--        {{form.description}}-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3 px-5 py-3 text-left" id="inputG4">-->
+<!--        <label for="id_blog_tag" class="sr-only"><h3 class="text-muted">Category</h3></label>-->
+<!--        {{form.blog_tag}}-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3 px-4 py-3" id="inputG5">-->
+<!--        <label for="id_article" class="sr-only">Article</label>-->
+<!--        {{form.article}}-->
+<!--    </div>-->
+<!--    <div class="input-group mb-3 px-3 py-3" id="inputG6">-->
+<!--        <label for="id_image" class="sr-only">Image</label>-->
+<!--        {{form.image}}-->
+<!--    </div>-->
+<!--    <button class="btn btn-sm btn-outline-dark btn-flex w-50" type="submit" id="de-subtn">-->
+<!--        post-->
+<!--        <svg version="1.1" height="20" width="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"-->
+<!--             viewBox="0 0 486.736 486.736" style="enable-background:new 0 0 486.736 486.736;" xml:space="preserve">-->
+<!--<g>-->
+<!--	<path d="M481.883,61.238l-474.3,171.4c-8.8,3.2-10.3,15-2.6,20.2l70.9,48.4l321.8-169.7l-272.4,203.4v82.4c0,5.6,6.3,9,11,5.9-->
+<!--		l60-39.8l59.1,40.3c5.4,3.7,12.8,2.1,16.3-3.5l214.5-353.7C487.983,63.638,485.083,60.038,481.883,61.238z"/>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--            <g>-->
+<!--</g>-->
+<!--</svg>-->
+<!--    </button>-->
+<!--</form>-->
+<!--<script src="{%static 'assets/js/jquery-3.3.1.min.js' %}"></script>-->
+<!-- https://jquery.com/download/ -->
+<!--<script src="{%static 'assets/jquery-ui-datepicker/jquery-ui.min.js' %}"></script>-->
+<!-- https://jqueryui.com/download/ -->
+<script src="{%static 'assets/js/bootstrap.min.js' %}"></script>
+<!--<script src="{%static 'assets/js/upload_blog.js' %}"></script>-->
+<!-- https://getbootstrap.com/ -->
+<!--<script>-->
+<!--        $(function () {-->
+<!--            $('#expire_date').datepicker();-->
+<!--        });-->
+
+
+<!--</script>-->
+<script src="{%static 'assets/js/semantic.js' %}"></script>
+<script>
+
+		//Query All input fields
+		var form_fields = document.getElementsByTagName('input')
+		form_fields[1].placeholder='Title..';
+		form_fields[2].placeholder='Description';
+
+
+		for (var field in form_fields){
+			form_fields[1].className += ' form-control'
+			form_fields[2].className += ' form-control'
+		}
+
+
+
+</script>
+<script>
+$('.ui.checkbox')
+  .checkbox()
+;
+</script>
+<!--<form action="/like/" method="POST" class="px-3">-->
+<!--    <input type="hidden" name="csrfmiddlewaretoken"-->
+<!--           value="fjlgs0nGp9k4IJ3KkA4bwp5Ql3qaNYqyIxMcn2E9ou21suRPWRy7KYeq2R82DzwX">-->
+<!--    <input type="hidden" name="post_id" value="3">-->
+
+<!--    <button class="btn">like<i class="bi-hand-thumbs-up" id="like"></i></button>-->
+
+
+<!--</form>-->
+</body>
+</html>

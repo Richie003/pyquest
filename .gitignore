@@ -1,0 +1,12 @@
+myenv/
+.env
+.venv
+env/
+env/*
+venv/
+ENV/
+env.bak/
+venv.bak/
+myenv.bak/
+blog/migrations/
+Readfiles/migrations/

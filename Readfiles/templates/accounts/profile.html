@@ -1,0 +1,74 @@
+<!doctype html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!--Bootstrap CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--Custom CSS-->
+    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet">
+    <link href="{%static 'assets/css/grid.css' %}" rel="stylesheet">
+
+</head>
+<style>
+</style>
+<body class="bg-light">
+<div class="container px-5 my-5">
+    <div class="row gx-5">
+        <div class="bg-light col-md-6 themed-grid-col">
+            <div class="px-2 py-2">
+                <div id="alert-box my-5">Images appear here . . .</div>
+                <div id="image-box"></div>
+            </div>
+        </div>
+        <div class="bg-dark col-md-6 themed-grid-col">
+            <form action="" id="image-form" method="POST">
+                {%csrf_token%}
+                <div class="form-floating">{{form.display_photo}}</div>
+                <div class="floating-form">{{form.description}}</div>
+                <div class="floating-form">{{form.user}}</div>
+
+                <button class="btn btn-outline-light mt-3 not-visible" id="confirm-btn" type="submit">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    const alertBox= document.getElementById('alert-box')
+    const imageBox= document.getElementById('image-box')
+    const imageForm= document.getElementById('image-form')
+    const confirmBtn= document.getElementById('confirm-btn')
+    const input= document.getElementById('id_display_photo')
+    const csrf= document.getElementsByName('csrfmiddlewaretoken')
+
+    input.addEventListener('change', ()=>{
+        console.log('changed')
+        const img_data = input.files[0]
+        const url = URL.createObjectURL(img_data)
+        imageBox.innerHTML = `<img src="${url}" id="image" class="img-fluid rounded-circle" width="450px" height="250px" style="height:359px !important; object-fit:fill;">`
+        document.querySelector('#alert-box').style = "display:none;"
+    })
+
+	var form_fields = document.getElementsByTagName('input')
+	const select_fields = document.getElementById('id_user')
+<!--		form_fields[1].value='';-->
+<!--		form_fields[2].placeholder='What Do You Do?..';-->
+<!--		form_fields[3].placeholder='Bio..';-->
+
+
+	for (var field in form_fields){
+	    form_fields[2].className += ' form-control py-3 mt-3'
+	    form_fields[3].className += ' form-control py-3 mt-3'
+	}
+	select_fields.style = 'display:none;'
+
+
+</script>
+</body>
+</html>
