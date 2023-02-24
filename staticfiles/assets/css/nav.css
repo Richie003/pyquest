@@ -1,0 +1,5 @@
+@media only screen and (max-width: 768px){
+	header.navb.d-flex.justify-content-between.align-items-center{
+	    display:none;
+	}
+}

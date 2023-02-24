@@ -1,0 +1,200 @@
+<!doctype html>
+{%extends 'navs/nav.html' %}
+{%block content%}
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>{%block title%}Py|Quest... Followers{%endblock%}</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/offcanvas/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{%static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      #thelink{
+        text-decoration:none!important;
+      }
+      #thelink.clicked{
+        display:none;
+        text-decoration:none!important;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      @media (max-width: 992px) {
+        #search-but{
+            width:100% !important;
+        }
+      }
+
+
+
+
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="{%static 'assets/css/offcanvas.css' %}" rel="stylesheet">
+</head>
+<style>
+    .media.text-muted.pt-3.d-flex.align-items-center.border-bottom.border-gray {
+    padding-inline: 11px 11px;
+}
+    .bg-modal, .bg-modal2, .bg-modal3{
+        width:100%;
+        height:100%;
+        background-color: rgba(0, 0, 0, 0.7)!important;
+        position:absolute;
+        top:0;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+    .modal-content{
+        width:500px!important;
+        height:67px!important;
+        background:#fff;
+        text-align: center!important;
+        position:relative;
+    }
+    .close{
+        position:absolute!important;
+        top:0!important;
+        right:14px;
+        font-size:41px;
+        transform:rotate(45deg);
+        cursor:pointer!important;
+    }
+    .close:hover{
+        color:red;
+        position:absolute!important;
+        top:0!important;
+        right:14px;
+        font-size:41px;
+        transform:rotate(19deg);
+        cursor:pointer!important;
+    }
+
+
+
+
+</style>
+<body class="bg-light" style="padding-top:0;">
+<div class="nav-scroller bg-white shadow-sm my-1" style="">
+    <nav class="nav nav-underline">
+        <a class="nav-link active" href="#">Dashboard</a>
+        <a class="nav-link" href="#">
+            Friends
+            <span class="badge badge-pill bg-light align-text-bottom">27</span>
+        </a>
+        <a class="nav-link" href="#">Explore</a>
+        <a class="nav-link" href="#">Suggestions</a>
+    </nav>
+</div>
+
+<main role="main" class="container">
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded shadow-sm">
+    <span class="py-1 mr-3">
+      <label for="people"></label>
+      <i class="bi-people-fill" id="people" style="font-size:20px;"></i>
+    </span>
+        <div class="lh-100">
+            <h6 class="mb-0 text-white lh-100">People you may like to follow</h6>
+            <small></small>
+        </div>
+        <button class="btn btn-outline-light btn-sm mx-2 my-2 my-sm-0" type="button" onclick="openClick(this)"><i
+                class="bi bi-search"></i></button>
+
+    </div>
+    <div class="w-50 container-sm bg-dark px-3 py-1 rounded d-none" id="search-but">
+        <div class="search my-2">
+            <form class="my-2 my-lg-0" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value="">
+            </form>
+        </div>
+    </div>
+
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Suggestions</h6>
+        {%if views%}
+        {%for view in views%}
+        <div class="media text-muted pt-3">
+            <img src="{%static 'assets/images/profile.png'%}" class="img img-rounded" alt="" width="30" height="30">
+
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <a href="{%url 'u_profile' view.id%}" class="text-decoration-none">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <strong class="text-secondary">{{view.user}}</strong>
+                    </div>
+                </a>
+                <!--                <span class="d-block">{{view.username}}</span>-->
+            </div>
+
+        </div>
+        {%endfor%}
+        {%endif%}
+        <small class="d-block text-right mt-3">
+            <a href="#">All suggestions</a>
+        </small>
+    </div>
+</main>
+<!--{%for message in messages%}-->
+<!--<div class="bg-modal2 rounded py-3 px-3" id="share">-->
+<!--    <div class="modal-content py-2 px-3">-->
+<!--        <div class="close" onclick="cancelClicker(this)">+</div>-->
+<!--        <div class="mt-3 d-flex justify-content-around align-items-center">-->
+<!--            <p>{{message|safe}}</p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--{%endfor%}-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    if(document.querySelector(".bg-modal2").style="display:flex !important;"){
+        document.querySelector(".nav-scroller").style="z-index:0 !important;"
+    }else{
+        document.querySelector(".nav-scroller").style="z-index:2 !important;"
+    }
+    function cancelClicker(element){
+        document.querySelector(".bg-modal2").style="display:none !important;"
+        document.querySelector(".nav-scroller").style="z-index:2 !important;"
+    }
+
+
+</script>
+<script>
+        function openClick(element){
+            var enlargeBtn = document.getElementById('search-but')
+            if (enlargeBtn.classList.contains('d-none')){
+                enlargeBtn.classList.remove('d-none');
+            }else{
+                enlargeBtn.classList.add('d-none');
+            }
+        }
+</script>
+<script src="{%static 'assets/js/offcanvas.js' %}"></script>
+<script>
+</script>
+</body>
+</html>
+{%endblock%}

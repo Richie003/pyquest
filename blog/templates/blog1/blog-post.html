@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+{%extends 'navs/nav.html' %}
+{%load static%}
+{%block meta%}
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+<meta name="author" content="{{view.author|safe}}"/>
+{%endblock meta%}
+{%block content%}
+<html lang="en">
+<head>
+    <title>{{view.title|safe}}</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <link id="mystylesheet" rel="stylesheet" href="{%static 'assets/css/light2.css' %}">
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet"/>
+    <script src="{%static 'assets/js/reload.js' %}"></script>
+    <script>
+        var user = '{{request.user}}'
+
+        function getCookie(name){
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== ''){
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++){
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')){
+                        cookieValue = decodeURIComponent(cookie.substring(
+                            name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+    </script>
+
+</head>
+<style>
+body, #the_article{
+    font-family: 'Roboto Condensed', sans-serif !important;
+}
+.card{
+    border:none!important;
+}
+        .img-fluid {
+    max-width: 100%;
+<!--    height: ;-->
+}
+.business-link a{
+    text-decoration:none;
+}
+p.fs-5.mb-4 {
+    font-family: system-ui;
+}
+.contn {
+    border: 1px solid #e5e3e3;
+    border-radius: 14px;
+    margin-top: 9px;
+}
+.date{
+    background: grey;
+    width: 140px;
+    text-align: center;
+    border-radius: 7px;
+}
+.mb-5 {
+    margin-bottom: 3rem !important;
+    font-family: cursive;
+    }
+
+.links.d-flex {
+    justify-content: left;
+    align-items: center;
+}
+p.fs-5.mb-4 {
+    font-size: 20px;
+}
+.mb-5 {
+    margin-bottom: 3rem!important;
+    font-family: cursive;
+    font-size: 20px;
+}
+.mb-5 a{
+    color:#483f9a;
+    text-decoration:none;
+}
+.del, .edit {
+    border-right: 1px solid rgb(71 75 78 / 10%);
+    border-bottom: 1px solid rgb(71 75 78 / 10%);
+}
+
+.del:hover{
+    border-right: 1px solid rgb(77 82 86 / 35%);
+    border-bottom: 1px solid rgb(77 82 86 / 35%);
+}
+
+.edit:hover{
+    border-right: 1px solid rgb(77 82 86 / 35%);
+    border-bottom: 1px solid rgb(77 82 86 / 35%);
+}
+textarea#id_body {
+    height:208px;
+}
+
+
+
+.comment-container {
+    height: 110px;
+    overflow: hidden;
+}
+.socials {
+    top: 230px;
+    left: -15.9px;
+    z-index: 1;
+}
+
+</style>
+<body class="d-flex flex-column">
+<main class="flex-shrink-0">
+    <!-- Page Content-->
+    <section class="py-5">
+        <div class="container px-2 my-5">
+            <div class="row gx-5">
+                <div class="col-lg-3">
+                    <div class="d-flex align-items-center mt-lg-5 mb-4">
+                        <img class="img-fluid rounded-circle" src="{%static 'assets/images/profile.png' %}" alt="..."
+                             height="70" width="50"/>
+                        <div class="ms-3">
+                            <div class="fw-bold">{{view.author|capfirst}}</div>
+                            <div class="text-muted">{{view.description}}</div>
+                        </div>
+                    </div>
+                    <!--{%for but in theme%}-->
+                    <!--<input class="btn btn-primary btn-{{but.name}}" type="button"-->
+                    <!--       style="border:1px solid; transition:0.5 ease-out;"-->
+                    <!--       onclick="swapStyle('/staticfiles/assets/css/{{but.theme}}')" name="light2.css"-->
+                    <!--       value="{{but.name}}" id="user_theme">-->
+                    <!--{%endfor%}-->
+                </div>
+                <div class="col-lg-9">
+                    <!-- Post content-->
+                    <article>
+                        <!-- Post header-->
+                        <header class="mb-4">
+                            <!-- Post title-->
+                            <h1 class="fw-bolder mb-1">{{view.title|capfirst|safe}}</h1>
+                            <!-- Post meta content-->
+                            <div class="text-muted fst-italic mb-2">{{view.created|date:"D d M Y"}}</div>
+                            <!-- Post categories-->
+                            {%for tag in taggs%}
+                            <a class="badge bg-secondary text-decoration-none link-light tag" role="button" name="tagg"
+                               href="?tag={{tag}}" data-tag={{tag.id}}>{{tag}}</a>
+                            {%endfor%}
+                        </header>
+                        <!-- Preview image figure-->
+                        <figure class="mb-4"><a href="{{view.image.url}}" onclick="parseUrl" rel=""
+                                                class="imglink" id="img_url"><img class="img-fluid rounded"
+                                                                                  src="{{view.image.url}}"
+                                                                                  alt="Article image"
+                                                                                  width="450" height="450"
+                                                                                  id="img_prop"
+                                                                                  style="height: 308px; object-fit: cover;"/></a>
+                        </figure>
+                        <!-- Post content-->
+                        <section class="mb-5" id="the_article">
+                            <p class="fs-5 mb-4">
+                                {{view.article|safe}}</p>
+                            {%if user == view.author%}
+                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center"
+                                 style="font-size:16px;">
+                                <a href="{%url 'delete' view.id %}" class="btn btn-danger btn-sm mr-2">
+                                    <i class="bi bi-trash text-light" id="delete"></i>
+                                </a>
+                                <a href="{%url 'update' view.id %}" class="btn btn-info btn-sm mr-2">
+                                    <i class="bi bi-pencil text-light" id="edit"></i>
+                                </a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}"
+                                   class="link-primary btn btn-primary btn-sm mr-2">
+                                    <i class="bi bi-share text-light" id="share"></i>
+                                </a>
+                                <span class="btn btn-sm btn-dark btn-icon-split">
+                                    <span class="icon text-white-50">
+                                      <i class="bi bi-eye"></i>
+                                    </span>
+                                    <span class="text">{{view.viewed.all.count}}</span>
+                                </span>
+                                <form action="{%url 'like_blog' %}" method="POST" class="like-form" id="{{view.id}}">
+                                    {%csrf_token%}
+                                    <input type="hidden" name="blog_id" value={{view.id}}>
+                                    <button class="btn like-btn{{view.id}}" type="submit">
+                                        {%if request.user not in view.liked.all%}
+                                        Like
+                                        {%else%}
+                                        Liked
+                                        {%endif%}
+                                    </button>
+                                </form>
+                            </div>
+                            {%else%}
+                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center">
+                                <span class="btn btn-sm btn-dark btn-icon-split">
+                                    <span class="icon text-white-50">
+                                      <i class="bi bi-eye"></i>
+                                    </span>
+                                    <span class="text">{{view.viewed.all.count}}</span>
+                                </span>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}"
+                                   class="link-primary btn btn-primary btn-sm ml-2">
+                                    <i class="bi bi-share text-light" id="share"></i>
+                                </a>
+                                <form action="{%url 'like_blog' %}" method="POST" class="like-form" id="{{view.id}}">
+                                    {%csrf_token%}
+                                    <input type="hidden" name="blog_id" value={{view.id}}>
+                                    <button class="btn like-btn{{view.id}}" type="submit">
+                                        {%if request.user not in view.liked.all%}
+                                        Like
+                                        {%else%}
+                                        Unlike
+                                        {%endif%}
+                                    </button>
+                                </form>
+                            </div>
+                            {%endif%}
+
+                        </section>
+                    </article>
+                    <!-- Comments section-->
+                    <section>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <!-- Comment form-->
+                                <form class="mb-4" method="POST" action="{%url 'blog_detail' view.pk%}">
+                                    {%csrf_token%}
+                                    {{form.body}}
+                                    <div class="btn-space">
+                                        <input type="submit" rel="=?comm={{view.id}}"
+                                               class="comment-btn btn btn-dark btn-sm px-4 me-sm-3 mt-3"
+                                               value="Comment">
+                                    </div>
+                                </form>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <span class="ml-3">
+                                        <label for="comment">
+                                            <b>{{counter}}comment(s)</b>
+                                        </label>
+                                        <i class="bi-chat" id="comment"></i>
+                                    </span>
+                                    <span class="ml-3">
+                                        <label for="views">
+                                            <b class="like-count{{view.id}}">{{view.liked.all.count}}</b>
+                                            <h6>like(s)</h6>
+                                        </label>
+                                        <i class="bi-eye" id="views"></i>
+                                    </span>
+
+                                </div>
+                                <div class="comment-container" id="comment-box">
+                                    {%for comment in comments%}
+                                    <div class="contn">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0"><img class="rounded-circle"
+                                                                            src="{%static 'assets/images/profile.png' %}"
+                                                                            alt="..." width="32px" height="32px"/></div>
+                                            <div class="ms-3">
+                                                {%if comment.name%}
+                                                <div class="fw-bold">{{comment.name|capfirst}}</div>
+                                                {%else%}
+                                                    {%if ip_add == comment.ip_addr%}
+                                                    <div class="fw-bold">{{comment.ip_addr}}</div>
+                                                    {%else%}
+                                                    <div class="fw-bold">You</div>
+                                                    {%endif%}
+                                                {%endif%}
+                                                {{comment.body|safe|capfirst|urlize|safe}}
+                                                <p class="date" style="background:#b1b1b1;">{{comment.date_added|date:'d M Y'}}</p>
+                                            </div>
+                                        </div>
+                                        <!--                                    <div class="links d-flex px-4" style="">-->
+                                        <!--                                        <i class="ml">reply</i>-->
+                                        <!--                                        <i class="ml">like</i>-->
+                                        <!--                                        <i class="ml">dislike</i>-->
+                                        <!--                                    </div>-->
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                                {%if comments%}
+                                {% if comments.count > 1%}
+                                <div class="comment-view text-end  mb-xl-0">
+                                    <a class="text-decoration-none" id="comments-view" style="cursor:pointer;">See
+                                        more</a>
+                                    <a class="text-decoration-none" id="comments-unview"
+                                       style="cursor:pointer; display:none;">See less</a>
+                                </div>
+                                {%endif%}
+                                {%endif%}
+
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <p class="text-center fw-bolder fs-5 mb-4">More stories from {{view.author}}</p>
+        <div class="card bg-light mb-4 py-3 border-left-primary">
+            <div class="container-sm">
+                {%for related in other%}
+                <div class="px-3 mb-4 border-bottom">
+                    <a class="link-dark text-decoration-none" href="{%url 'blog_detail' related.id%}"><h3>
+                        {{related.title}}</h3></a>
+                    <div class="small text-muted">{{related.created|date:'d M'}}</div>
+                    <!--                    <p>{{request.method}}</p>-->
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </section>
+</main>
+<div class="card shadow mb-4" id="illustrate">
+    <div class="card-body">
+        <div class="blod">
+            <div class="my-1 p-2 bg-white rounded shadow-sm">
+                <h6 class="border-bottom border-gray pb-2 mb-0">Viewed By</h6>
+
+{%for user_view in i%}
+                <div class="media text-muted pt-3">
+                    <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+                        <div class="d-flex align-items-center">
+                                <ul>
+                                    <li>
+                                        <a href="{%url 'u_profile' user_view.id%}" class="text-decoration-none text-muted fw-bolder">{{user_view}}</a>
+                                    </li>
+                                </ul>
+                        </div>
+                    </div>
+
+                </div>
+                {%endfor%}
+
+                <small class="d-block text-right mt-3">
+
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approach -->
+
+</div>
+<section class="py-2 px-3 position-fixed socials">
+    <ul class="px-2 rounded">
+        <li class="py-2 px-2 text-light bg-primary"><a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}" class="text-decoration-none py-1"><i class="bi bi-facebook text-light px-1 fs-5"></i></a></li>
+        <li class="py-2 px-2 text-light" style="background-color:rgb(29, 161, 242);"><a href="https://twitter.com/intent/tweet?url={{request.build_absolute_uri}}" class="text-decoration-none py-1"><i class="bi bi-twitter text-light px-1 fs-5"></i></a></li>
+        <li class="py-2 px-2 text-light bg-success"><a href="" class="text-decoration-none py-1"><i class="bi bi-whatsapp text-light px-1 fs-5"></i></a></li>
+    </ul>
+</section>
+<!-- Footer-->
+<!-- Bootstrap core JS-->
+</body>
+</html>
+{%endblock%}
+
+{%block scripts%}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{%static 'assets/js/like_post.js' %}"></script>
+<script>
+    						/* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
+		//We start indexing at one because CSRF_token is considered an input field
+		 */
+
+		//Query All input fields
+		var form_fields = document.getElementsByTagName('textarea')
+		form_fields[0].placeholder='Comment..';
+
+		for (var field in form_fields){
+			form_fields[field].className += ' form-control'
+		}
+
+
+
+
+
+</script>
+<script>
+    var setTheme = localStorage.getItem('theme')
+    var theme = document.getElementById('user_theme')
+    var link = document.getElementById('img_url')
+    var imag = document.getElementById('img_prop')
+    var commentsView = document.getElementById('comments-view')
+    var commentsUnview = document.getElementById('comments-unview')
+    var commentBox = document.getElementById('comment-box')
+
+    commentsView.addEventListener('click', ()=> {
+        commentBox.style = 'height: 284px; overflow: auto;'
+        commentsView.style = 'display:none;'
+        commentsUnview.style = 'display:initial; cursor:pointer;'
+    })
+    commentsUnview.addEventListener('click', ()=> {
+        commentBox.style = ''
+        commentsView.style = 'cursor:pointer;'
+        commentsUnview.style = 'display:none;'
+    })
+
+</script>
+{%endblock%}
+<!--TODO>> EDIT the comment such that it doesn't reload after a comment has been uploaded by a user.-->

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+{%extends 'navs/nav.html' %}
+{%load static%}
+{%load myfilters%}
+{%block content%}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>{%block title%}Py|Quest Stories{%endblock%}</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet"/>
+    <link href="{%static 'assets/css/bootstrap-icons.css' %}" rel="stylesheet"/>
+</head>
+<style>
+        .card {
+        }
+img.img.rounded-circle {
+    border: 1px solid #75757777;
+}
+textarea {
+    resize: none;
+}
+textarea.form-control.comment-box {
+    height: 93px;
+}
+.bg-featured-blog {
+    height: 34vh;
+    width: 100%;
+    object-fit: cover;
+}
+.button {
+    position: absolute;
+    top: 236px;
+    right: 27px;
+}
+.article_div {
+    max-height: 13.7vh;
+    overflow: hidden;
+}
+@media (max-width: 548px) {
+    .button {
+        position: absolute;
+        top: 258px;
+        right: 27px;
+    }
+}
+
+@media (min-width: 768px) {
+    .button {
+        position: absolute;
+        top: 261px;
+        right: 51px;
+    }
+}
+@media (min-width: 992px) {
+    .bg-featured-blog {
+        height: 67.5vh;
+        background-size: cover !important;
+    }
+    .button {
+        position: absolute;
+        top: 288px;
+        right: 51px;
+    }
+}
+
+
+.blog-post{
+    max-height: 179px !important;
+    overflow: hidden !important;
+}
+
+p#see-all {
+    position: relative;
+    top: -45px;
+    right: -13px;
+}
+</style>
+<body class="d-flex flex-column">
+<main class="flex-shrink-0">
+    <!-- Page Content-->
+    <section class="py-5">
+        <div class="px-1">
+            <h1 class="fw-bolder fs-5 mb-4">Discover | {{request.GET.search}}</h1>
+            {%for item in blog_dt%}
+                <div class="blog-post my-3 shadow rounded-3 px-4 py-3" id="{{item.id}}">
+                    <div class="h-50">
+                        <div class="d-flex align-items-center">
+                        <i class="fas fa-user text-secondary" style="font-size:1.5rem;"></i>
+                        <h2 class="blog-post-title mx-2"><b>{{item.title|capfirst}}</b></h2>
+                    </div>
+                    <p class="blog-post-meta">{{item.created|date:'D j M Y'}}<a href="{%url 'u_profile' item.author_id%}" class="bg-light rounded-3 mx-2 text-dark font-weight-bolder text-decoration-none">by: {{item.author}}</a></p>
+<!--                    <p class="blog-post-meta">{{item.updated|date:'D j M Y'}}</p>-->
+                    <p class="text-muted font-weight-bold">
+                        {%if request.user in item.liked.all%}
+                        <i class="fas fa-heart text-danger"></i>
+                        {%else%}
+                        <i class="fas fa-heart mx-1 text-muted font-weight-normal"></i>
+                        {%endif%}
+                        {{item.liked.all.count}}like{{item.liked.all|pluralize}}
+                        <i class="fas fa-comments mx-1 text-muted font-weight-normal"></i>{{item.comments.count}}comment(s)
+                    </p>
+                        <p class="m-0 p-0 text-end ml-2" id="see-all"><button class="btn btn-sm btn-secondary mb-2" onclick="openClick(this, {{item.id}})"><i id="{{item.author}}" class="bi bi-eye-slash" style=""></i></button></p>
+                        <div class="imag w-100 py-3 px-1">
+                            <img class="img-fluid rounded" src="{{item.image.url}}" alt="Article image" width="450" height="450" id="img_prop" style="width: -webkit-fill-available; height: 50vh; object-fit: cover;">
+                        </div>
+                        <p class="border px-1">{{item.article|truncatechars_html:150|safe}}</p>
+                        <br>
+                        <a href="{%url 'blog_detail' item.id%}" class="text-primary text-decoration-none">read more...</a>
+                    </div>
+                </div>
+            {%endfor%}
+        </div>
+        <div class="text-end mb-5 mb-xl-0 px-4">
+            <ul class="pagination">
+                {%if blog_dt.has_previous%}
+                <li class="page-item">
+                    <a href="?page={{blog_dt.previous_page_number }}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
+                       class="page-link text-decoration-none" aria-label="Previous">
+                        <i class="fas fa-angle-left text-warning"></i>
+                    </a>
+                </li>
+                {%endif%}
+                <li class="page-item">
+                    <span role="banner" class="page-link text-decoration-none" style="color:#777;">Page {{ blog_dt.number }} of {{ blog_dt.paginator.num_pages }}</span>
+                </li>
+                {%if blog_dt.has_next%}
+                <li class="page-item">
+                    <a href="?page={{blog_dt.next_page_number}}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
+                       class="page-link text-decoration-none" aria-label="Next">
+                        <i class="fas fa-angle-right text-warning"></i>
+                    </a>
+                </li>
+                {%endif%}
+            </ul>
+        </div>
+    </section>
+    <section class="py-5 bg-light">
+        <div class="container px-5">
+            <div class="row gx-5">
+                <div class="col-xl-4">
+                    <div class="card border-0 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <div class="h6 fw-bolder">Contact</div>
+                                    <p class="text-muted mb-4">
+                                        For press inquiries, email us at
+                                        <br/>
+                                        <a href="#!" style="color:#fff;">pyquest@info.com</a>
+                                    </p>
+                                    <div class="h6 fw-bolder">Follow us</div>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-twitter"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-facebook"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-linkedin"></i></a>
+                                    <a class="fs-5 px-2 link-dark" href="#!"><i class="bi-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+<script>
+        function openClick(element, ID){
+            var enlargeBtn = document.getElementById(ID)
+            if (enlargeBtn.classList.contains('blog-post')){
+                enlargeBtn.classList.remove('blog-post');
+                element.innerHTML = `<i id="{{item.author}}" class="bi bi-eye" style=""></i>`
+            }else{
+                enlargeBtn.classList.add('blog-post');
+                element.innerHTML = `<i id="{{item.author}}" class="bi bi-eye-slash" style=""></i>`
+            }
+        }
+</script>
+</body>
+</html>
+{%endblock%}
+
+<!--TODO>> EDIT the comment such that it doesn't reload after a comment has been uploaded by a user.-->
