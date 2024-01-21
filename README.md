@@ -1,4 +1,3 @@
-# pyquest
 # Pyquest__Bloggarian__
 ***A blog web application to post ideas. Have a view of the project here [Launch](https://richie003.pythonanywhere.com)
 
