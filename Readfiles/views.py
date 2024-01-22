@@ -18,11 +18,29 @@ from .forms import UserAdminCreationForm, BioForms, CategoryForm, SubscriptionFo
 # Create your views here.
 from .models import User, Bio, Follow, Category, Subscription, PaidUser
 
+def get_user_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 
 @unauthenticated_user
 @ensure_csrf_cookie
 @csrf_protect
 def register_view(request):
+    """
+    The `register_view` function handles the registration process for users, including form validation,
+    saving user information, authentication, and session management.
+    
+    :param request: The `request` parameter is an object that represents the HTTP request made by the
+    user. It contains information about the request, such as the method used (GET or POST), the user's
+    IP address, and any data submitted with the request
+    :return: a redirect to the 'sub_cat' URL if the form is valid and the user is authenticated.
+    Otherwise, it is rendering the 'accounts/register.html' template with the form as context.
+    """
     form = UserAdminCreationForm
     if request.method == 'POST':
         form = UserAdminCreationForm(request.POST or None, request.FILES)
@@ -64,6 +82,7 @@ def login_page(request):
             get_user.update(
                 active_user=True
             )
+            print(get_user_ip(request))
             request.session['member_id'] = username + '45'
             if "next" in request.POST:
                 return redirect(request.POST.get("next"))

@@ -104,7 +104,7 @@ def search_res(request):
 @csrf_protect
 def blog_detail(request, pk):
     user = request.user
-    ip_add = request.META['REMOTE_ADDR']
+    # ip_add = request.META['REMOTE_ADDR']
     view = BlogData.objects.get(id=pk)
     like_count = Like.objects.filter(post=view)
     stringed = quote_plus(view.title)
@@ -139,7 +139,7 @@ def blog_detail(request, pk):
                 return HttpResponseRedirect(reverse('blog_detail', args=[str(pk)]))
             else:
                 instance =form.save(commit=False)
-                instance.ip_addr = request.META['REMOTE_ADDR']
+                instance.anon_user = request.POST.get('anon-user')
                 instance.blog = view
                 instance.save()
                 url = f'/blog/{view.pk}'
@@ -160,7 +160,7 @@ def blog_detail(request, pk):
         "user": user,
         "stringed": stringed,
         "like_count": like_count,
-        'ip_add': ip_add,
+        # 'ip_add': ip_add,
         'encoded_path': encoded_path
     }
     return render(request, "blog1/blog-post.html", context)

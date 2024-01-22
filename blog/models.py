@@ -23,7 +23,7 @@ class BlogData(models.Model):
     # article = models.TextField(default='', max_length=7000, null=False, blank=False, )
     article = RichTextField(blank=True, null=True)
     image = models.ImageField(default='profile1.jpg', blank=True, null=True,
-                              upload_to='blog_img/')
+                                upload_to='blog_img/')
     liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', default='', blank=True)
     anon_like = models.CharField(default="", max_length=255, blank=True, null=False)
     viewed = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='viewed', default='', blank=True)
@@ -40,6 +40,14 @@ class BlogData(models.Model):
     @property
     def num_likes(self):
         return self.liked.all().count()
+    
+    @property
+    def get_comments(self):
+        return Comment.objects.filter(id=self.id)
+    
+    # @property
+    # def get_like
+        
 
     class Meta:
         ordering = ['-created', '-updated']
@@ -48,12 +56,17 @@ class BlogData(models.Model):
 class Comment(models.Model):
     blog = models.ForeignKey(BlogData, null=True, related_name="comments", on_delete=models.SET_NULL)
     name = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
-    ip_addr = models.CharField(default='', max_length=255, blank=True)
+    anon_user = models.CharField(default='', max_length=255, blank=True)
     body = models.TextField()
     date_added = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "%s - %s" % (self.blog, self.name)
+        if self.name:
+            return "%s - %s" % (self.blog, self.name)
+        elif self.anon_user:
+            return "%s - %s" % (self.blog, self.anon_user)
+        else:
+            return str(self.blog)
 
     class Meta:
         ordering = ['-date_added']

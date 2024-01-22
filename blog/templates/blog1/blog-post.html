@@ -19,7 +19,7 @@
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet"/>
     <script src="{%static 'assets/js/reload.js' %}"></script>
@@ -52,9 +52,8 @@ body, #the_article{
 .card{
     border:none!important;
 }
-        .img-fluid {
+.img-fluid {
     max-width: 100%;
-<!--    height: ;-->
 }
 .business-link a{
     text-decoration:none;
@@ -134,7 +133,7 @@ textarea#id_body {
                 <div class="col-lg-3">
                     <div class="d-flex align-items-center mt-lg-5 mb-4">
                         <img class="img-fluid rounded-circle" src="{%static 'assets/images/profile.png' %}" alt="..."
-                             height="70" width="50"/>
+                            height="70" width="50"/>
                         <div class="ms-3">
                             <div class="fw-bold">{{view.author|capfirst}}</div>
                             <div class="text-muted">{{view.description}}</div>
@@ -241,11 +240,14 @@ textarea#id_body {
                                 <!-- Comment form-->
                                 <form class="mb-4" method="POST" action="{%url 'blog_detail' view.pk%}">
                                     {%csrf_token%}
+                                    {%if not request.user.is_authenticated%}
+                                    <input type="text" name="anon-user" id="" class="form-control my-3" placeholder="Your Name">
+                                    {%endif%}
                                     {{form.body}}
                                     <div class="btn-space">
                                         <input type="submit" rel="=?comm={{view.id}}"
-                                               class="comment-btn btn btn-dark btn-sm px-4 me-sm-3 mt-3"
-                                               value="Comment">
+                                            class="comment-btn btn btn-dark btn-sm px-4 me-sm-3 mt-3"
+                                            value="Comment">
                                     </div>
                                 </form>
                                 <div class="d-flex justify-content-end align-items-center">
@@ -275,11 +277,7 @@ textarea#id_body {
                                                 {%if comment.name%}
                                                 <div class="fw-bold">{{comment.name|capfirst}}</div>
                                                 {%else%}
-                                                    {%if ip_add == comment.ip_addr%}
-                                                    <div class="fw-bold">{{comment.ip_addr}}</div>
-                                                    {%else%}
-                                                    <div class="fw-bold">You</div>
-                                                    {%endif%}
+                                                <div class="fw-bold">{{comment.anon_user}}</div>
                                                 {%endif%}
                                                 {{comment.body|safe|capfirst|urlize|safe}}
                                                 <p class="date" style="background:#b1b1b1;">{{comment.date_added|date:'d M Y'}}</p>

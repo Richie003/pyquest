@@ -24,7 +24,7 @@ SECRET_KEY = 'SECRET_KEY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://richie003.pythonanywhere.com', 'richie003.pythonanywhere.com', 'www.richie003.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'https://richie003.pythonanywhere.com', 'richie003.pythonanywhere.com', 'www.richie003.pythonanywhere.com']
 
 # Application definition
 
@@ -138,3 +138,4 @@ MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
