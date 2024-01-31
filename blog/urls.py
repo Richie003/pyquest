@@ -14,7 +14,9 @@ urlpatterns = [
     path('update/<str:pk>/', views.blog_update, name='update'),
     path('delete/<str:pk>/', views.blog_delete, name='delete'),
     path('like/', views.like_post, name='like_blog'),
-    path('search/', views.search_res, name='search')
+    path('search/', views.search_res, name='search'),
+    path('create_episode/<str:title>/<int:pk>/', views.create_episode, name="create_episode"),
+    path('get_episode_data/', views.episode_data)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -75,14 +75,25 @@ TEMPLATES = [
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',
-        'extraPlugins': ','.join(
-            [
-              'pbckcode',
-            ]
-        ),
-    },
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat'],
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['Image', 'HorizontalRule', 'Iframe'],
+            {'name': 'yourcustomtools', 'items': [
+                # put the name of your editor.ui.addButton here
+                'Preview',
+                'Maximize',
+
+            ]}
+        ]
+    }
+    
 }
+
 
 WSGI_APPLICATION = 'Filereader.wsgi.application'
 
@@ -126,6 +137,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_REDIRECT_URL = "home"
+LOGIN_URL = "login"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

@@ -4,8 +4,7 @@ const searchInput = document.getElementById('search-input')
 const suggestionBox = document.getElementById('suggestion-box')
 const suggestionCont = document.getElementById('suggestion-cont')
 const suggestionImage = document.getElementById('suggestion-img')
-const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value
-console.log(csrf)
+const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
 const sendSearchData = (blog) => {
     $.ajax({

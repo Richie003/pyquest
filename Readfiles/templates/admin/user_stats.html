@@ -371,50 +371,60 @@ button.btn.btn-sm.btn-outline-dark.search-btn {
                         <!-- Illustrations -->
                         <div class="card shadow mb-4" id="illustrate">
                             <div class="card-header py-3 text-center">
-                                <h6 class="m-0 font-weight-bold text-dark">Illustrations</h6>
-                                <form action="" method="GET" class="search_form">
-                                    <input type="text" class="form-control mt-2" placeholder="Find post ..."
-                                           maxlength="56">
-                                    <button type="submit" class="btn btn-sm btn-outline-dark search-btn"><i
-                                            class="fas fa-search"></i></button>
-                                </form>
+                                <h6 class="m-0 font-weight-bold text-dark"></h6>
                             </div>
                             <div class="card-body">
                                 <div class="text-center blod">
                                     <div class="my-1 p-3 bg-white rounded shadow-sm">
                                         <h6 class="border-bottom border-gray pb-2 mb-0">Posts</h6>
                                         {%if data%}
-                                        {%for obj in data%}
-                                        <div class="media text-muted pt-3">
-                                            <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32"
-                                                 xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"
-                                                 focusable="false" role="img" aria-label="Placeholder: 32x32"><title>
-                                                Placeholder</title>
-                                                <rect width="100%" height="100%" fill="rgb(90 92 105)"></rect>
-                                                <text x="50%" y="50%" fill="rgb(90 92 105)" dy=".3em">32x32</text>
-                                            </svg>
-                                            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                                                <div class="d-flex justify-content-between align-items-center w-100">
-                                                    <p class="text-muted d-none" id="{{obj.id}}">{{obj.title|truncate_url}}</p>
-                                                    <strong class="text-gray-dark"><a
-                                                            href="{%url 'blog_detail' obj.id%}"
-                                                            class="text-decoration-none text-gray-dark">{{obj.title}}</a></strong>
-                                                    <div class="buts-forms d-flex">
-                                                        <button type="button" class="btn btn-sm btn-outline-warning mx-2"
-                                                                id="share" onclick="shareClick(this, '{{obj.id}}')"><i class="fas fa-share-alt"></i></button>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Gender</th>
+                                                        <th>Subject</th>
+                                                        <th>Class</th>
+                                                        <th>Contact Info</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Gender</th>
+                                                        <th>Subject</th>
+                                                        <th>Class</th>
+                                                        <th>Contact Info</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                {%for data in data%}
+                                                <tr id="{{data.id}}">
+                                                    <td>{{data.title}}</td>
+                                                    <td>{{data.description}}</td>
+                                                    <td>{{data.liked.count}}</td>
+                                                    <td>{{data.created}}</td>
+                                                    <td>{{data.updated}}</td>
+                                                    <td id="button-{{data.id}}">
+                                                        <button type="button" class="btn btn-sm btn-outline-warning mx-2" id="share" onclick="shareClick(this, '{{obj.id}}')"><i class="fas fa-share-alt"></i></button>
                                                         <form action="" method="POST">
-                                                        {%csrf_token%}
-                                                        <input type="hidden" id="blog_id" name="blog_ID"
-                                                               value="{{obj.id}}">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                                id="trash"><i class="fas fa-trash"></i></button>
-                                                    </form>
-                                                    </div>
-                                                </div>
-                                                <span class="d-block">Posted on: {{obj.created|date:'D d M Y'}} @{{obj.created|time}}</span>
+                                                            {%csrf_token%}
+                                                            <input type="hidden" id="blog_id" name="blog_ID"
+                                                                value="{{obj.id}}">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                    id="trash"><i class="fas fa-trash"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                {%endfor%}
+                                                </tbody>
+                                            </table>
                                             </div>
                                         </div>
-                                        {%endfor%}
                                         {%else%}
                                         <h5 class="text-muted mt-4">
                                             <b>No posts yet...</b>
@@ -437,12 +447,11 @@ button.btn.btn-sm.btn-outline-dark.search-btn {
                             <div class="card-body text-center">
                                 <div class="text-center px-2">
                                     <img class="img-fluid rounded-circle px-3 px-sm-4 mt-3 mb-4"
-                                         src="{%static 'assets/images/profile.png' %}" alt="" width="150" height="150">
+                                        src="{%static 'assets/images/profile.png' %}" alt="" width="150" height="150">
                                 </div>
                                 <p class="text-dark font-weight-bolder">{{request.user}}</p>
                                 <p>
-                                    <a href="{%url 'profile' request.user.pk%}" class="btn btn-sm btn-outline-success my-2 text-success"
-                                       id="secrets"><i
+                                    <a href="{%url 'profile' request.user.pk%}" class="btn btn-sm btn-outline-success my-2 text-success" id="secrets"><i
                                             class="fas fa-user-edit"></i></a>
                                     <button class="btn btn-sm btn-outline-warning my-2" id="secret"><i
                                             class="fas fa-share-alt"></i></button>
@@ -555,40 +564,40 @@ button.btn.btn-sm.btn-outline-dark.search-btn {
 <script src="{%static 'assets/js/demo/chart-area-demo.js' %}"></script>
 <script src="{%static 'assets/js/demo/chart-pie-demo.js' %}"></script>
 <script>
-  var myPost = document.getElementById('my_post')
-  var delPost = document.getElementById('trash')
-  var blogID = document.getElementById('blog_id')
-  var myIllure = document.getElementById('illustrate')
+    var myPost = document.getElementById('my_post')
+    var delPost = document.getElementById('trash')
+    var blogID = document.getElementById('blog_id')
+    var myIllure = document.getElementById('illustrate')
 
-  myPost.addEventListener('click', ()=> {
+myPost.addEventListener('click', ()=> {
     myIllure.style = 'transform: translateY(-500px); transition: 2s ease-in-out;'
-  })
+})
 
 var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
-  type: 'line',
-  data: {
+    type: 'line',
+    data: {
     labels: [{%for titles in data%}'{{titles.title}}',{%endfor%}],
     datasets: [{
-      label: "No. of likes",
-      lineTension: 0.3,
-      backgroundColor: "rgb(90 92 105/ 10%)",
-      borderColor: "rgb(90 92 105)",
-      pointRadius: 3,
-      pointBackgroundColor: "rgb(90 92 105)",
-      pointBorderColor: "rgb(90 92 105)",
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgb(90 92 105/ 100%)",
-      pointHoverBorderColor: "rgb(90 92 105/ 50%)",
-      pointHitRadius: 10,
-      pointBorderWidth: 2,
-      data: [{%for likes in data%}{{likes.liked.all.count}},{%endfor%}],
+        label: "No. of likes",
+        lineTension: 0.3,
+        backgroundColor: "rgb(90 92 105/ 10%)",
+        borderColor: "rgb(90 92 105)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgb(90 92 105)",
+        pointBorderColor: "rgb(90 92 105)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgb(90 92 105/ 100%)",
+        pointHoverBorderColor: "rgb(90 92 105/ 50%)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [{%for likes in data%}{{likes.liked.all.count}},{%endfor%}],
     }],
-  },
-  options: {
+},
+options: {
     maintainAspectRatio: false,
     layout: {
-      padding: {
+        padding: {
         left: 10,
         right: 25,
         top: 25,

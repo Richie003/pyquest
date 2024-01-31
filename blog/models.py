@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.utils.timezone import now
 
 
 # Create your models here.
-# THIS IS THE CEDARSTORE BLOG MODEL
 class BlogTag(models.Model):
     lists = (
         ('AI', 'AI'),
@@ -45,13 +45,14 @@ class BlogData(models.Model):
     def get_comments(self):
         return Comment.objects.filter(id=self.id)
     
-    # @property
-    # def get_like
+    @property
+    def get_episodes(self):
+        query_episodes = Episode.objects.filter(linked_to_id=self.id)
+        return query_episodes
         
 
     class Meta:
         ordering = ['-created', '-updated']
-
 
 class Comment(models.Model):
     blog = models.ForeignKey(BlogData, null=True, related_name="comments", on_delete=models.SET_NULL)
@@ -72,13 +73,46 @@ class Comment(models.Model):
         ordering = ['-date_added']
 
 
-LIKE_CHOICES = (
-    ('Like', 'Like'),
-    ('Dislike', 'Dislike'),
-)
+class Episode(models.Model):
+    linked_to = models.ForeignKey(BlogData, null=True, default=1, on_delete=models.SET_NULL, blank=True)
+    title = models.CharField(default='', max_length=100, null=True, blank=True)
+    article = RichTextField(blank=True, null=True)
+    created = models.DateTimeField(auto_created=True, auto_now_add=True, editable=True)
+    updated = models.DateTimeField(default=now)
+    
+    def __str__(self):
+        return str(self.linked_to)
+    
+    @property
+    def get_episode_comments(self):
+        query_episode_comment = EpisodeComment.objects.filter(episode_name=self.id)
+        return query_episode_comment
+    
+    class Meta:
+        ordering = ['-created']
 
+class EpisodeComment(models.Model):
+    episode_name = models.ForeignKey(Episode, null=True, related_name="comments", on_delete=models.SET_NULL)
+    name = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    anon_user = models.CharField(default='', max_length=255, blank=True)
+    body = models.TextField()
+    date_added = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        if self.name:
+            return "%s - %s" % (self.blog, self.name)
+        elif self.anon_user:
+            return "%s - %s" % (self.blog, self.anon_user)
+        else:
+            return str(self.episode_name)
+
+    class Meta:
+        ordering = ['-date_added']
 class Like(models.Model):
+    LIKE_CHOICES = (
+        ('Like', 'Like'),
+        ('Dislike', 'Dislike'),
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, default=1, on_delete=models.CASCADE, blank=True)
     post = models.ForeignKey(BlogData, null=True, default=1, on_delete=models.CASCADE)
     value = models.CharField(choices=LIKE_CHOICES, default="", max_length=20)

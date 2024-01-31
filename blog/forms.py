@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import CheckboxSelectMultiple
 
-from .models import Comment, BlogData, Settings, BlogTag
+from .models import Comment, BlogData, Settings, BlogTag, Episode
 from django.dispatch import receiver
 
 
@@ -16,11 +16,11 @@ class BlogDataForm(forms.ModelForm):
             'blog_tag'
         )
 
-    def __init__(self, *args, **kwargs):
-        super(BlogDataForm, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(BlogDataForm, self).__init__(*args, **kwargs)
 
-        self.fields["blog_tag"].widget = CheckboxSelectMultiple()
-        self.fields["blog_tag"].queryset = BlogTag.objects.all()
+    #     self.fields["blog_tag"].widget = CheckboxSelectMultiple()
+    #     self.fields["blog_tag"].queryset = BlogTag.objects.all()
 
     # def save(self, commit=True):
     #     # Save the provided password in hashed format
@@ -30,6 +30,14 @@ class BlogDataForm(forms.ModelForm):
     #         blog.save()
     #     return blog
 
+
+class EpisodeForm(forms.ModelForm):
+    class Meta:
+        model = Episode
+        fields = (
+            'title',
+            'article',
+        )
 
 class CommentForm(forms.ModelForm):
     class Meta:

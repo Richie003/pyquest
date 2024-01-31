@@ -21,24 +21,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.css" integrity="sha512-tdyzfjYDk2OR9L10jvzzuGUB0Rvl5fyMW/Z8yfbYyyENfuXxtcDtEq7d/PdiA0hzQzXjWwvZasjEp8Joli2tkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- <link rel="stylesheet" href="{%static 'assets/css/semantic.css' %}"> -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
 </head>
 <style>
-  #id_title, #id_description{
+  #id_title, #id_description, #lead_title{
     border: none !important;
   }
-  #id_title, #id_description:focus{
+  #id_title, #id_description, #lead_title:focus{
     border: none !important;
     border-color: transparent !important;
     box-shadow: none !important;
   }
-  #id_title{
+  #lead_title{
+    text-align: center;
     font-size: xx-large !important;
     font-weight: bold;
+    opacity: 0.67;
   }
-  #id_description{
+  #id_title{
     font-size: x-large;
+    font-weight: bold;
   }
-  #id_title, #id_description, #id_blog_tag,
+  #id_title, #lead_title, #id_blog_tag,
   #id_image{
       width:100%;
   }
@@ -149,36 +153,27 @@
       border: 1px solid #75757726;
       border-radius: 4px;
   }
-  </style>
+</style>
 <body class="text-center">
     <form class="ui form px-4 py-5" method="POST" action="" enctype="multipart/form-data">
         {%csrf_token%}
-        <h1 class="h3 mb-3 font-weight-normal" id="big-text">Update your content</h1>
         <div class="field px-4">
             {{form.media}}
         </div>
-  <div class="field my-3 text-start">
+<div class="field my-3 text-start">
+    <input type="text" name="" id="lead_title" value="{{title}}" readonly>
+</div>
+<div class="field my-3 text-start">
     {{form.title}}
-  </div>
-  <div class="field my-3 text-start">
-    {{form.description}}
-  </div>
-  <hr>
-  <div class="field my-3 text-start">
-    <label for="id_blog_tag" class="form-label fw-bold text-muted">Add a Label</label>
-    <input type="hidden" name="hidden-values">
-    {{form.blog_tag}}
-  </div>
-  <hr>
-  <div class="field my-3 text-start">
-    <label for="id_image" class="form-label fw-bold text-muted">Thumbnail Image</label>
-    {{form.image}}
-  </div>
-  <hr>
-  <div class="field my-3 text-start">
+</div>
+<hr>
+<div class="field my-3 text-start">
     {{form.article}}
-  </div>
-  <button class="btn btn-outline-dark" type="submit">Post</button>
+</div>
+<div class="field my-3 text-start">
+    <div id="editor"></div>
+</div>
+<button class="btn btn-outline-dark" type="submit">Post</button>
 </form>
 <script src="{%static 'assets/js/jquery.js' %}"></script>
 <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -186,35 +181,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.js" integrity="sha512-PD2QRjH0s7TFz8Oicpi4UFJBdKP0vFeYpmNPsEoNDHfG3QcGLTs8XUrkXWEQXX2Q0g+1oEwvow27TM2VfPdTxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
-		//Query All input fields
-		var form_fields = document.getElementsByTagName('input')
-		form_fields[1].placeholder='Title...';
-		form_fields[2].placeholder='Description...';
+    //Query All input fields
+    var form_fields = document.getElementsByTagName('input')
+    form_fields[2].placeholder='Title...';
 
-    $('select').addClass('ui fluid search dropdown')
-    $('input[type=file]').addClass('form-control')
-    console.log($('input[type=file]').val())
     $('input[type=text]').addClass('form-control px-1')
 
-
-
-</script>
-<script>
-$('.ui.dropdown').dropdown();
-// Your JavaScript code
-$(document).ready(function () {
-  $('#id_blog_tag').change(function () {
-    // Get the selected values manually
-    var selectedValues = [];
-    $('#id_blog_tag option:selected').each(function () {
-      selectedValues.push($(this).val());
+    CKEDITOR.lang.load('en', 'en', function(lc, data) {
+        data.format.tag_p = 'Standard text';
+        data.format.tag_h1 = 'Title';
+        data.format.tag_h3 = 'Subtitle';
     });
-    
-    $('input[name=hidden-values]').val(selectedValues);
-  });
-});
-
-
 </script>
 </body>
 </html>

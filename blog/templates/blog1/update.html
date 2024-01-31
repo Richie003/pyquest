@@ -7,14 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Upload</title>
-    <!--
-
-    Template 2108 Dashboard
-
-	http://www.tooplate.com/view/2108-dashboard
-
-    -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
     <!-- https://fonts.google.com/specimen/Open+Sans -->
@@ -22,281 +16,184 @@
     <!-- https://fontawesome.com/ -->
     <!--    <link rel="stylesheet" href="{%static 'assets/jquery-ui-datepicker/jquery-ui.min.css' %}" type="text/css"/>-->
     <!-- http://api.jqueryui.com/datepicker/ -->
-    <link rel="stylesheet" href="{%static 'assets/css/bootstrap.min.css' %}">
-    <!-- https://getbootstrap.com/ -->
+    <!-- <link rel="stylesheet" href="{%static 'assets/css/bootstrap.min.css' %}"> -->
     <link rel="stylesheet" href="{%static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.css" integrity="sha512-tdyzfjYDk2OR9L10jvzzuGUB0Rvl5fyMW/Z8yfbYyyENfuXxtcDtEq7d/PdiA0hzQzXjWwvZasjEp8Joli2tkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="{%static 'assets/css/semantic.css' %}"> -->
 </head>
 <style>
-#id_title, #id_description, #id_blog_tag,
-#id_image{
-    width:100%;
-}
-#id_image{
-    border:none;
-    width:100%;
-}
-    #id_author{
-        display:none;
-    }
-    #id_barcode{
-        display:none;
-    }
-    #id_blog_tag{
-        list-style:none;
-        width:67%;
-    }
-<!--    #id_title::placeholder{-->
-<!--        color:red;-->
-<!--    }-->
-    .bg02 {
-    background:#777!important;
-}
-nav.sidebar-nav {
-    position: fixed;
-    top: 38%;
-    left: -12px;
-    height: 33vh;
-    width: 46%;
-}
-ul.sidebar-ul {
-    margin: 0;
-    padding: 5px;
-}
-li.sidebar-li {
-    width: 43px;
-    padding: 4px;
-    border: 1px solid #75757726;
-    margin: 4px;
-    border-radius: 8px;
-    background: #484848;
-}
-a.sidebar-a.text-decoration-none {
-    color: #fff !important;
-}
+  #id_title, #id_description{
+    border: none !important;
+  }
+  #id_title, #id_description:focus{
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  #id_title{
+    font-size: xx-large !important;
+    font-weight: bold;
+  }
+  #id_description{
+    font-size: x-large;
+  }
+  #id_title, #id_description, #id_blog_tag,
+  #id_image{
+      width:100%;
+  }
+  #id_image{
+      border:none;
+      width:100%;
+  }
+      #id_author{
+          display:none;
+      }
+      #id_barcode{
+          display:none;
+      }
+      #id_blog_tag{
+          list-style:none;
+          width:67%;
+      }
 
-h1.h3.mb-3.font-weight-normal {
-    font-weight:900 !important;
-}
-
-::-webkit-file-upload-button{
-    background:#606467;
-        color: #f8f9fa;
-    border-color: #f8f9fa;
-    border-radius: 0.3rem;
-    padding-right:1.5rem !important;
-    padding-left: 1.5rem !important;
-}
-.text-edit.col-12 {
-    background: #77777787;
-}
-
-.django-ckeditor-widget{
-    width: 100%;
-}
-div#cke_id_article{
-    width: inherit !important;
-}
-@media (min-width: 590px) {
-    nav.sidebar-nav {
-        width: 36% !important;
-    }
-}
-
-@media (min-width: 992px) {
-    div#cke_id_article {
-        width: 100% !important;
-    }
-}
-
-@media (max-width: 741px) {
-    #id_title, #id_description, #id_blog_tag,
-    #id_image{
-        width:80%;
-    }
-}
-
-form#contactForm {
-    padding-left: 3rem;
-    padding-right: 3rem;
-    flex-direction:column;
-}
-
-#id_blog_tag {
-    max-height: 141px;
-    overflow: auto;
-    border: 1px solid #75757726;
-    border-radius: 4px;
-}
-
-</style>
+      .bg02 {
+      background:#777!important;
+  }
+  nav.sidebar-nav {
+      position: fixed;
+      top: 38%;
+      left: -12px;
+      height: 33vh;
+      width: 46%;
+  }
+  ul.sidebar-ul {
+      margin: 0;
+      padding: 5px;
+  }
+  li.sidebar-li {
+      width: 43px;
+      padding: 4px;
+      border: 1px solid #75757726;
+      margin: 4px;
+      border-radius: 8px;
+      background: #484848;
+  }
+  a.sidebar-a.text-decoration-none {
+      color: #fff !important;
+  }
+  
+  h1.h3.mb-3.font-weight-normal {
+      font-weight:900 !important;
+  }
+  
+  ::-webkit-file-upload-button{
+      background:#606467;
+          color: #f8f9fa;
+      border-color: #f8f9fa;
+      border-radius: 0.3rem;
+      padding-right:1.5rem !important;
+      padding-left: 1.5rem !important;
+  }
+  .text-edit.col-12 {
+      background: #77777787;
+  }
+  
+  .django-ckeditor-widget{
+      width: 100%;
+  }
+  div#cke_id_article{
+      width: inherit !important;
+  }
+  @media (min-width: 590px) {
+      nav.sidebar-nav {
+          width: 36% !important;
+      }
+  }
+  
+  @media (min-width: 992px) {
+      div#cke_id_article {
+          width: 100% !important;
+      }
+  }
+  
+  @media (max-width: 741px) {
+      #id_title, #id_description, #id_blog_tag,
+      #id_image{
+          width:100%;
+      }
+  }
+  
+  form#contactForm {
+      padding-left: 3rem;
+      padding-right: 3rem;
+      flex-direction:column;
+  }
+  
+  #cke_1_top, .cke_inner, .cke_reset, #cke_id_article, .django-ckeditor-widget{
+      border-radius: 14px;
+  }
+  #cke_1_top{
+      background: gainsboro;
+  }
+  #id_blog_tag {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+  }
+  
+  #id_blog_tag {
+      max-height: 141px;
+      overflow: auto;
+      border: 1px solid #75757726;
+      border-radius: 4px;
+  }
+  </style>
 <body class="text-center">
-<!--<nav class="sidebar-nav">-->
-<!--    <ul class="sidebar-ul px-3 py-2">-->
-<!--        <li class="sidebar-li" style="list-style:none;"><a class="sidebar-a text-decoration-none" id="title">T</a></li>-->
-<!--        <li class="sidebar-li" style="list-style:none;"><a class="sidebar-a text-decoration-none" id="description">D</a>-->
-<!--        </li>-->
-<!--        <li class="sidebar-li" style="list-style:none;"><a class="sidebar-a text-decoration-none" id="tag">TG</a></li>-->
-<!--        <li class="sidebar-li" style="list-style:none;"><a class="sidebar-a text-decoration-none" id="article">A</a>-->
-<!--        </li>-->
-<!--        <li class="sidebar-li" style="list-style:none;"><a class="sidebar-a text-decoration-none" id="image">I</a></li>-->
-<!--    </ul>-->
-<!--</nav>-->
-{%if status%}
-<form id="contactForm" method="POST" action="" enctype="multipart/form-data" class="px-3 py-5 d-flex align-center justify-content-left">
-    {%csrf_token%}
-    <div class="input-group mb-3 px-3 py-3" id="inputG1">
-        {{form.media}}
-    </div>
-    <h1 class="h3 mb-3 font-weight-normal" id="big-text">Update your content</h1>
-    <div class="input-group mb-3 px-5 py-3" id="inputG2">
-        <label for="id_title" class="sr-only">Title:</label>
-        {{form.title}}
-    </div>
-    <div class="input-group mb-3 px-5 py-3" id="inputG3">
-        <label for="id_description" class="sr-only">Description:</label>
-        {{form.description}}
-    </div>
-    <div class="input-group mb-3 px-5 py-3 text-left" id="inputG4">
-        <label for="id_blog_tag" class="sr-only"><h3 class="text-muted">Category</h3></label>
-        {{form.blog_tag}}
-    </div>
-    <div class="input-group mb-3 px-4 py-3" id="inputG5">
-        <label for="id_article" class="sr-only">Article</label>
-        {{form.article}}
-    </div>
-    <div class="input-group mb-3 px-3 py-3" id="inputG6">
-        <label for="id_image" class="sr-only">Image</label>
-        {{form.image}}
-    </div>
-    <button class="btn btn-sm btn-outline-dark btn-flex w-50" type="submit" id="de-subtn">
-        post
-        <svg version="1.1" height="20" width="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-             viewBox="0 0 486.736 486.736" style="enable-background:new 0 0 486.736 486.736;" xml:space="preserve">
-<g>
-	<path d="M481.883,61.238l-474.3,171.4c-8.8,3.2-10.3,15-2.6,20.2l70.9,48.4l321.8-169.7l-272.4,203.4v82.4c0,5.6,6.3,9,11,5.9
-		l60-39.8l59.1,40.3c5.4,3.7,12.8,2.1,16.3-3.5l214.5-353.7C487.983,63.638,485.083,60.038,481.883,61.238z"/>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-</svg>
-    </button>
+    <form class="ui form px-4 py-5" method="POST" action="" enctype="multipart/form-data">
+        {%csrf_token%}
+        <h1 class="h3 mb-3 font-weight-normal" id="big-text">Update your content</h1>
+        <div class="field px-4">
+            {{form.media}}
+        </div>
+  <div class="field my-3 text-start">
+    {{form.title}}
+  </div>
+  <div class="field my-3 text-start">
+    {{form.description}}
+  </div>
+  <hr>
+  <div class="field my-3 text-start">
+    <label for="id_blog_tag" class="form-label fw-bold text-muted">Add a Label</label>
+    <input type="hidden" name="hidden-values">
+    {{form.blog_tag}}
+  </div>
+  <hr>
+  <div class="field my-3 text-start">
+    <label for="id_image" class="form-label fw-bold text-muted">Thumbnail Image</label>
+    {{form.image}}
+  </div>
+  <hr>
+  <div class="field my-3 text-start">
+    {{form.article}}
+  </div>
+  <button class="btn btn-outline-dark" type="submit">Update</button>
 </form>
-{%else%}
-<form id="contactForm" method="POST" action="" enctype="multipart/form-data" class="px-3 py-5 d-flex align-center justify-content-left">
-    {%csrf_token%}
-    <h1 class="h3 mb-3 font-weight-normal" id="big-text">Update your content</h1>
-    <div class="input-group mb-3 px-5 py-3" id="inputG2">
-        <label for="id_title" class="sr-only">Title:</label>
-        {{form.title}}
-    </div>
-    <div class="input-group mb-3 px-5 py-3" id="inputG3">
-        <label for="id_description" class="sr-only">Description:</label>
-        {{form.description}}
-    </div>
-    <div class="input-group mb-3 px-5 py-3 text-left" id="inputG4">
-        <label for="id_blog_tag" class="sr-only"><h3 class="text-muted">Category</h3></label>
-        {{form.blog_tag}}
-    </div>
-    <div class="input-group mb-3 px-4 py-3" id="inputG5">
-        <label for="id_article" class="sr-only">Article</label>
-        {{form.article|safe|safe}}
-    </div>
-    <div class="input-group mb-3 px-3 py-3" id="inputG6">
-        <label for="id_image" class="sr-only">Image</label>
-        {{form.image}}
-    </div>
-    <button class="btn btn-sm btn-outline-dark btn-flex w-50" type="submit" id="de-subtn">
-        post
-        <svg version="1.1" height="20" width="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-             viewBox="0 0 486.736 486.736" style="enable-background:new 0 0 486.736 486.736;" xml:space="preserve">
-<g>
-	<path d="M481.883,61.238l-474.3,171.4c-8.8,3.2-10.3,15-2.6,20.2l70.9,48.4l321.8-169.7l-272.4,203.4v82.4c0,5.6,6.3,9,11,5.9
-		l60-39.8l59.1,40.3c5.4,3.7,12.8,2.1,16.3-3.5l214.5-353.7C487.983,63.638,485.083,60.038,481.883,61.238z"/>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-            <g>
-</g>
-</svg>
-    </button>
-</form>
-{%endif%}
-<!--<script src="{%static 'assets/js/jquery-3.3.1.min.js' %}"></script>-->
-<!-- https://jquery.com/download/ -->
-<!--<script src="{%static 'assets/jquery-ui-datepicker/jquery-ui.min.js' %}"></script>-->
-<!-- https://jqueryui.com/download/ -->
-<script src="{%static 'assets/js/bootstrap.min.js' %}"></script>
-<!--<script src="{%static 'assets/js/upload_blog.js' %}"></script>-->
-<!-- https://getbootstrap.com/ -->
-<!--<script>-->
-<!--        $(function () {-->
-<!--            $('#expire_date').datepicker();-->
-<!--        });-->
-
-
-<!--</script>-->
+<script src="{%static 'assets/js/jquery.js' %}"></script>
+<script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{%static 'assets/js/semantic.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.js" integrity="sha512-PD2QRjH0s7TFz8Oicpi4UFJBdKP0vFeYpmNPsEoNDHfG3QcGLTs8XUrkXWEQXX2Q0g+1oEwvow27TM2VfPdTxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
 		//Query All input fields
 		var form_fields = document.getElementsByTagName('input')
-		form_fields[1].placeholder='Title..';
-		form_fields[2].placeholder='Description';
+		form_fields[1].placeholder='Title...';
+		form_fields[2].placeholder='Description...';
 
-
+    $('select').addClass('ui fluid search dropdown')
+    $('input[type=file]').addClass('form-control')
+    console.log($('input[type=file]').val())
 		for (var field in form_fields){
 			form_fields[1].className += ' form-control'
 			form_fields[2].className += ' form-control'
@@ -306,17 +203,22 @@ form#contactForm {
 
 </script>
 <script>
+$('.ui.dropdown').dropdown();
+// Your JavaScript code
+$(document).ready(function () {
+  $('#id_blog_tag').change(function () {
+    // Get the selected values manually
+    var selectedValues = [];
+    $('#id_blog_tag option:selected').each(function () {
+      selectedValues.push($(this).val());
+    });
+    
+    // Log or use the selected values as needed
+    $('input[name=hidden-values]').val(selectedValues);
+  });
+});
 
 
 </script>
-<!--<form action="/like/" method="POST" class="px-3">-->
-<!--    <input type="hidden" name="csrfmiddlewaretoken"-->
-<!--           value="fjlgs0nGp9k4IJ3KkA4bwp5Ql3qaNYqyIxMcn2E9ou21suRPWRy7KYeq2R82DzwX">-->
-<!--    <input type="hidden" name="post_id" value="3">-->
-
-<!--    <button class="btn">like<i class="bi-hand-thumbs-up" id="like"></i></button>-->
-
-
-<!--</form>-->
 </body>
 </html>

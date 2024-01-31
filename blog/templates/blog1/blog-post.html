@@ -122,7 +122,42 @@ textarea#id_body {
     left: -15.9px;
     z-index: 1;
 }
+.action-btns a{
+    border: none !important;
+    background: transparent !important;
+}
 
+.action-btns a:focus{
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.action-btns i{
+    color: #717171 !important;
+    font-size: 1.4rem !important;
+}
+
+.btn-icon-split {
+    position: relative;
+    margin: 0rem 0.3rem;
+}
+
+.btn-icon-split .text{
+    position: absolute;
+}
+
+.episode-col{
+    overflow-y: auto;
+    height: 34rem;
+}
+
+.episode-modal {
+    overflow-y: hidden !important;
+}
+
+a{
+    cursor:pointer !important;
+}
 </style>
 <body class="d-flex flex-column">
 <main class="flex-shrink-0">
@@ -164,67 +199,70 @@ textarea#id_body {
                         <!-- Preview image figure-->
                         <figure class="mb-4"><a href="{{view.image.url}}" onclick="parseUrl" rel=""
                                                 class="imglink" id="img_url"><img class="img-fluid rounded"
-                                                                                  src="{{view.image.url}}"
-                                                                                  alt="Article image"
-                                                                                  width="450" height="450"
-                                                                                  id="img_prop"
-                                                                                  style="height: 308px; object-fit: cover;"/></a>
+                                                src="{{view.image.url}}"
+                                                alt="Article image"
+                                                width="450" height="450"
+                                                id="img_prop"
+                                                style="height: 308px; object-fit: cover;"/></a>
                         </figure>
                         <!-- Post content-->
                         <section class="mb-5" id="the_article">
                             <p class="fs-5 mb-4">
                                 {{view.article|safe}}</p>
                             {%if user == view.author%}
-                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center"
-                                 style="font-size:16px;">
-                                <a href="{%url 'delete' view.id %}" class="btn btn-danger btn-sm mr-2">
+                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center action-btns"
+                                style="font-size:16px;">
+                                <a href="{%url 'delete' view.id %}" class="btn btn-danger btn-sm">
                                     <i class="bi bi-trash text-light" id="delete"></i>
                                 </a>
-                                <a href="{%url 'update' view.id %}" class="btn btn-info btn-sm mr-2">
-                                    <i class="bi bi-pencil text-light" id="edit"></i>
+                                <a href="{%url 'update' view.id %}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-pencil-square text-light" id="edit"></i>
                                 </a>
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}"
-                                   class="link-primary btn btn-primary btn-sm mr-2">
-                                    <i class="bi bi-share text-light" id="share"></i>
+                                <a data-link="{{request.build_absolute_uri}}"
+                                class="link-primary btn btn-primary btn-sm link-btn" style="transform: rotate(45deg)">
+                                    <i class="bi bi-link text-light" id="share"></i>
                                 </a>
-                                <span class="btn btn-sm btn-dark btn-icon-split">
+                                <a class="btn btn-dark" href="{%url 'create_episode' view.title view.pk%}">
+                                    <i class="bi bi-layers"></i>
+                                </a>
+                                <span class="btn-icon-split">
                                     <span class="icon text-white-50">
-                                      <i class="bi bi-eye"></i>
+                                    <i class="bi bi-eye"></i>
                                     </span>
                                     <span class="text">{{view.viewed.all.count}}</span>
                                 </span>
                                 <form action="{%url 'like_blog' %}" method="POST" class="like-form" id="{{view.id}}">
                                     {%csrf_token%}
                                     <input type="hidden" name="blog_id" value={{view.id}}>
-                                    <button class="btn like-btn{{view.id}}" type="submit">
+                                    <button class="btn like-btn{{view.id}}" type="submit" data-text="{%if request.user not in view.liked.all%}Like{%else%}Liked{%endif%}">
                                         {%if request.user not in view.liked.all%}
-                                        Like
+                                        <i class="bi bi-heart"></i>
                                         {%else%}
-                                        Liked
+                                        <i class="bi bi-heart-fill" style="color: red !important;"></i>
                                         {%endif%}
                                     </button>
                                 </form>
                             </div>
                             {%else%}
-                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center">
-                                <span class="btn btn-sm btn-dark btn-icon-split">
+                            <div class="fw-bolder mb-4 mt-5 d-flex justify-content-center align-items-center action-btns">
+                                <span class="btn-icon-split">
                                     <span class="icon text-white-50">
                                       <i class="bi bi-eye"></i>
                                     </span>
                                     <span class="text">{{view.viewed.all.count}}</span>
                                 </span>
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}"
+                                <a href="{{request.build_absolute_uri}}"
                                    class="link-primary btn btn-primary btn-sm ml-2">
-                                    <i class="bi bi-share text-light" id="share"></i>
+                                    <i class="bi bi-link text-light" id="share"></i>
                                 </a>
                                 <form action="{%url 'like_blog' %}" method="POST" class="like-form" id="{{view.id}}">
                                     {%csrf_token%}
                                     <input type="hidden" name="blog_id" value={{view.id}}>
-                                    <button class="btn like-btn{{view.id}}" type="submit">
+                                    <button class="btn like-btn{{view.id}}" type="submit" data-text="{%if request.user not in view.liked.all%}Like{%else%}Liked{%endif%}">
                                         {%if request.user not in view.liked.all%}
-                                        Like
+                                        <i class="bi bi-heart"></i>
                                         {%else%}
-                                        Unlike
+                                        <i class="bi bi-heart-fill" style="color: red !important;"></i>
                                         {%endif%}
                                     </button>
                                 </form>
@@ -326,30 +364,56 @@ textarea#id_body {
         </div>
     </section>
 </main>
+{%if view.get_episodes%}
 <div class="card shadow mb-4" id="illustrate">
     <div class="card-body">
         <div class="blod">
-            <div class="my-1 p-2 bg-white rounded shadow-sm">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Viewed By</h6>
-
-{%for user_view in i%}
-                <div class="media text-muted pt-3">
-                    <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
-                        <div class="d-flex align-items-center">
-                                <ul>
-                                    <li>
-                                        <a href="{%url 'u_profile' user_view.id%}" class="text-decoration-none text-muted fw-bolder">{{user_view}}</a>
-                                    </li>
-                                </ul>
+            <div class="my-1 p-2">
+                <h6 class="border-bottom border-gray pb-2 mb-0 fw-bolder">Episodes under <em>{{view.title}}</em></h6>
+                {%for episode in view.get_episodes%}
+                    <div class="media text-muted pt-3">
+                        <div class="media-body pb-1 mb-0 small lh-125 border-bottom border-gray">
+                            <div class="d-flex align-items-center">
+                                    <ul>
+                                        <li>
+                                            <a class="text-decoration-none text-muted fw-bolder" data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen" onclick="getEpisode(`{{episode.id}}`)">{{episode.title}}</a>
+                                        </li>
+                                    </ul>
+                            </div>
                         </div>
                     </div>
-
-                </div>
                 {%endfor%}
+                <div class="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body episode-modal">
+                                <div class="row">
+                                    <div class="col-md-7 episode-col">
+                                        <div class="h3 text-muted fw-bolder my-3" id="episode-title">
 
-                <small class="d-block text-right mt-3">
+                                        </div>
+                                        <div id="episode-body">
 
-                </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {%if not user.is_authenticated%}
+                                        <input type="text" name="" id="" class="form-control" placeholder="Your Name">
+                                        {%endif%}
+                                        <textarea name="" id="" cols="30" rows="10" class="form-control" placeholder="Comment..." style="height: 129px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -357,6 +421,7 @@ textarea#id_body {
     <!-- Approach -->
 
 </div>
+{%endif%} 
 <section class="py-2 px-3 position-fixed socials">
     <ul class="px-2 rounded">
         <li class="py-2 px-2 text-light bg-primary"><a href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}" class="text-decoration-none py-1"><i class="bi bi-facebook text-light px-1 fs-5"></i></a></li>
@@ -372,12 +437,12 @@ textarea#id_body {
 
 {%block scripts%}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{%static 'assets/js/like_post.js' %}"></script>
+<script src="{%static 'assets/js/like_post1.js' %}"></script>
 <script>
-    						/* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
-		//We start indexing at one because CSRF_token is considered an input field
-		 */
-
+    /* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
+	//We start indexing at one because CSRF_token is considered an input field
+    */
+   console.log(`{{view.get_episodes}}`)
 		//Query All input fields
 		var form_fields = document.getElementsByTagName('textarea')
 		form_fields[0].placeholder='Comment..';
@@ -385,11 +450,6 @@ textarea#id_body {
 		for (var field in form_fields){
 			form_fields[field].className += ' form-control'
 		}
-
-
-
-
-
 </script>
 <script>
     var setTheme = localStorage.getItem('theme')
@@ -411,6 +471,28 @@ textarea#id_body {
         commentsUnview.style = 'display:none;'
     })
 
+function getEpisode(Id){
+    const Title = $('#episode-title');
+    const Article = $('#episode-body');
+    $.ajax({
+        type:"GET",
+        url:"/get_episode_data/",
+        data:{
+            episode_id:Id,
+        },
+        success:(response)=>{
+            Title.empty();
+            Article.empty();
+            for(res of response.episode){
+                Title.append(res['title']);
+                Article.append(res['body']);
+            }
+        },
+        error:(response)=>{
+            console.log("An error occurred\nplease try again...")
+        }
+    })
+}
 </script>
 {%endblock%}
 <!--TODO>> EDIT the comment such that it doesn't reload after a comment has been uploaded by a user.-->

@@ -673,7 +673,7 @@ nav#sidebarMenu {
                     </div>
                     <p class="blog-post-meta">published - {{item.created|date:'D d Y M'}}<a href="{%url 'u_profile' item.author_id%}" class="bg-light rounded-3 mx-2 text-dark font-weight-bolder text-decoration-none">by: {{item.author}}</a></p>
                     <p class="text-muted font-weight-bold">{{item.description|capfirst}}</p>
-                        <p class="m-0 p-0 text-end" id="see-all"><button class="btn btn-sm btn-secondary mb-2" onclick="openClick(this, {{item.id}})"><i id="{{item.author}}" class="bi bi-eye-slash" style=""></i></button></p>
+                        <p class="m-0 p-0 text-end" id="see-all"><button class="btn btn-sm btn-secondary mb-2" onclick="openClick(this, `{{item.id}}`)"><i id="{{item.author}}" class="bi bi-eye-slash"></i></button></p>
                         <div class="imag w-100 py-3 px-1">
                             <img class="img-fluid rounded" src="{{item.image.url}}" alt="Article image" width="450" height="450" id="img_prop" style="width: -webkit-fill-available; object-fit: cover;">
                         </div>
@@ -742,15 +742,6 @@ nav#sidebarMenu {
         document.querySelector(".bg-modal").style="display:none!important;";
         bodyTag.style = "overflow:visible;"
     }
-
-
-
-
-
-
-
-
-
 </script>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
