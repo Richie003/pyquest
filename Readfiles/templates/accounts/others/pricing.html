@@ -1,145 +1,216 @@
-<!DOCTYPE html>
+{%extends 'navs/nav.html'%}
 {%load static%}
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <title>Publishing plan</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet"/>
-</head>
-<body class="d-flex flex-column">
-<main class="flex-shrink-0">
-    <!-- Pricing section-->
-    <section class="bg-light py-5">
-        <div class="container px-5 my-5">
-            <div class="text-center mb-5">
-                <h1 class="fw-bolder">Plans you can't say NO! to</h1>
-                <p class="lead fw-normal text-muted mb-0">Be the best with our mouth watering plans</p>
-            </div>
-            <div class="row gx-5 justify-content-center">
-                <!-- Pricing card free-->
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card mb-5 mb-xl-0">
-                        <div class="card-body p-5">
-                            <div class="small text-uppercase fw-bold text-muted">Free</div>
-                            <div class="mb-3">
-                                <span class="display-4 fw-bold">$0</span>
-                                <span class="text-muted">/ month.</span>
-                            </div>
-                            <ul class="list-unstyled mb-4">
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    <strong>1 users</strong>
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Statistical dashboard
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Text-editing tools
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    3% Audience booster
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check"></i>
-                                    3Days plagiarism checker
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check"></i>
-                                    Monetized Blog
-                                </li>
-                                <li class="mb-2 text-muted">
-                                    <i class="bi bi-x"></i>
-                                    Automated Blog AD's
-                                </li>
-                                <li class="text-muted">
-                                    <i class="bi bi-x"></i>
-                                    Monthly status reports
-                                </li>
-                            </ul>
-                            <div class="d-grid">
-                                <form action="{%url 'paid' %}" method="POST">
-                                    {%csrf_token%}
-                                    <input type="hidden" name="category" value="Not_Paid">
-                                    <button class="btn btn-outline-dark" type="submit">Choose plan</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Pricing card pro-->
-                <div class="col-lg-6 col-xl-4">
-                    <div class="card mb-5 mb-xl-0">
-                        <div class="card-body p-5">
-                            <div class="small text-uppercase fw-bold">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                Pro
-                            </div>
-                            <div class="mb-3">
-                                <span class="display-4 fw-bold">$15.5</span>
-                                <span class="text-muted">/ month</span>
-                            </div>
-                            <ul class="list-unstyled mb-4">
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    <strong>5 users</strong>
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Pro Statistical dashboard
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Advanced text-editing tools
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Automated Blog AD's
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    10% Audience booster
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    15Days plagiarism checker
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-check text-primary"></i>
-                                    Monetized Blog
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-x"></i>
-                                    Monthly status reports
-                                </li>
-                            </ul>
-                            <div class="d-grid">
-                                <form action="{%url 'paid' %}" method="POST">
-                                    {%csrf_token%}
-                                    <input type="hidden" name="category" value="Paid">
-                                    <button class="btn btn-outline-dark" type="submit">Choose plan</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+{%block title%}Plans — Bloggarian{%endblock%}
+
+{%block extra_css%}
+<style>
+.ink-pricing-page {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+}
+
+.ink-pricing-top {
+    text-align: center;
+    margin-bottom: 52px;
+}
+
+.ink-pricing-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 14px;
+}
+
+.ink-pricing-top h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(30px, 4vw, 48px);
+    font-weight: 400;
+    color: var(--text-1);
+    margin: 0 0 14px;
+}
+
+.ink-pricing-top p {
+    font-size: 16px;
+    color: var(--text-3);
+    margin: 0;
+}
+
+.ink-pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.ink-pricing-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.ink-pricing-card.featured {
+    border-color: var(--gold);
+    position: relative;
+}
+
+.ink-pricing-card.featured::before {
+    content: 'PRO';
+    position: absolute;
+    top: -1px;
+    right: 24px;
+    background: var(--gold);
+    color: #0A0A0A;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 0 0 var(--r) var(--r);
+}
+
+.ink-pricing-tier {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 16px;
+}
+
+.ink-pricing-price {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.ink-pricing-period { font-size: 14px; color: var(--text-3); margin-bottom: 28px; }
+
+.ink-pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    flex: 1;
+}
+
+.ink-pricing-features li {
+    font-size: 14px;
+    color: var(--text-2);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.ink-pricing-features li i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.ink-pricing-features li i.bi-check-lg { color: var(--gold); }
+.ink-pricing-features li i.bi-x { color: var(--text-3); }
+.ink-pricing-features li.na { color: var(--text-3); }
+
+.ink-pricing-action { margin-top: auto; }
+
+.ink-pricing-action form { margin: 0; }
+
+.ink-plan-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.ink-plan-btn:hover { background: var(--gold-d); }
+
+.ink-plan-btn-outline {
+    width: 100%;
+    padding: 11px;
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.ink-plan-btn-outline:hover { background: var(--bg-2); color: var(--text-1); border-color: var(--text-3); }
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="ink-pricing-page">
+    <div class="ink-pricing-top">
+        <div class="ink-pricing-eyebrow">Publishing Plans</div>
+        <h1>Plans you can't say no to.</h1>
+        <p>Start free. Upgrade when you're ready to grow your audience.</p>
+    </div>
+
+    <div class="ink-pricing-grid">
+
+        <!-- Free -->
+        <div class="ink-pricing-card">
+            <div class="ink-pricing-tier">Free</div>
+            <div class="ink-pricing-price">$0</div>
+            <div class="ink-pricing-period">forever</div>
+            <ul class="ink-pricing-features">
+                <li><i class="bi bi-check-lg"></i> 1 publisher seat</li>
+                <li><i class="bi bi-check-lg"></i> Statistical dashboard</li>
+                <li><i class="bi bi-check-lg"></i> Rich text editor</li>
+                <li><i class="bi bi-check-lg"></i> 3% audience booster</li>
+                <li><i class="bi bi-check-lg"></i> 3-day plagiarism checker</li>
+                <li><i class="bi bi-check-lg"></i> Monetized blog</li>
+                <li class="na"><i class="bi bi-x"></i> Automated ads</li>
+                <li class="na"><i class="bi bi-x"></i> Monthly status reports</li>
+            </ul>
+            <div class="ink-pricing-action">
+                <form action="{%url 'paid' %}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" name="category" value="Not_Paid">
+                    <button type="submit" class="ink-plan-btn-outline">Get started free</button>
+                </form>
             </div>
         </div>
-    </section>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="{%static 'assets/js/scripts.js' %}"></script>
-</body>
-</html>
 
+        <!-- Pro -->
+        <div class="ink-pricing-card featured">
+            <div class="ink-pricing-tier">Pro</div>
+            <div class="ink-pricing-price">$15.50</div>
+            <div class="ink-pricing-period">per month</div>
+            <ul class="ink-pricing-features">
+                <li><i class="bi bi-check-lg"></i> Up to 5 publisher seats</li>
+                <li><i class="bi bi-check-lg"></i> Pro analytics dashboard</li>
+                <li><i class="bi bi-check-lg"></i> Advanced text editor</li>
+                <li><i class="bi bi-check-lg"></i> Automated blog ads</li>
+                <li><i class="bi bi-check-lg"></i> 10% audience booster</li>
+                <li><i class="bi bi-check-lg"></i> 15-day plagiarism checker</li>
+                <li><i class="bi bi-check-lg"></i> Monetized blog</li>
+                <li class="na"><i class="bi bi-x"></i> Monthly status reports</li>
+            </ul>
+            <div class="ink-pricing-action">
+                <form action="{%url 'paid' %}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" name="category" value="Paid">
+                    <button type="submit" class="ink-plan-btn">Choose Pro</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}

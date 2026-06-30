@@ -1,52 +1,124 @@
-<!doctype html>
+{%extends 'navs/nav.html'%}
 {%load static%}
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v4.1.1">
-    <title>{%block title%}Bloggarian | Category{%endblock%}</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
+{%block title%}Choose your plan — Bloggarian{%endblock%}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{%static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+{%block extra_css%}
+<style>
+.ink-category-page {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+}
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
+.ink-category-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 52px 44px;
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+}
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
+.ink-category-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--gold-dim);
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--gold);
+    margin: 0 auto 24px;
+}
 
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="{%static 'assets/css/signin.css' %}" rel="stylesheet">
-</head>
-<body class="text-center">
-<form class="form-signin" method="POST" action="">
-    {%csrf_token%}
-    <h1 class="h5 mb-3 font-weight-400">What category do you fit in?</h1>
-    {{form.plan}}
-    <button class="btn btn-lg btn-dark btn-block my-5" type="submit">Submit</button>
-</form>
+.ink-category-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0 0 8px;
+}
+
+.ink-category-card .subtitle {
+    font-size: 14px;
+    color: var(--text-3);
+    margin: 0 0 36px;
+    line-height: 1.6;
+}
+
+.ink-category-card select {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 13px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 20px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%235C5956'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+.ink-category-card select:focus { border-color: var(--gold); }
+
+.ink-category-card select option {
+    background: var(--bg-2);
+    color: var(--text-1);
+}
+
+.ink-submit-full {
+    width: 100%;
+    padding: 13px;
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.ink-submit-full:hover { background: var(--gold-d); }
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="ink-category-page">
+    <div class="ink-category-card">
+        <div class="ink-category-icon">
+            <i class="bi bi-person-badge"></i>
+        </div>
+
+        <h1>How do you fit in?</h1>
+        <p class="subtitle">
+            Tell us your role — this shapes your experience on Bloggarian. You can always change this later.
+        </p>
+
+        <form method="POST" action="">
+            {%csrf_token%}
+            {{form.plan}}
+            <button type="submit" class="ink-submit-full">Continue</button>
+        </form>
+    </div>
+</div>
+{%endblock%}
+
+{%block scripts%}
 <script>
-  		var form_fields = document.getElementsByTagName('select')
-
-		for (var field in form_fields){
-			form_fields[field].className += ' form-control'
-		}
+    var selects = document.getElementsByTagName('select');
+    for (var i = 0; i < selects.length; i++) {
+        selects[i].className = '';
+    }
 </script>
-</body>
-</html>
+{%endblock%}

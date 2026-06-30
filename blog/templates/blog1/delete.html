@@ -1,38 +1,117 @@
-<!DOCTYPE html>
+{%extends 'navs/nav.html'%}
 {%load static%}
 {%load myfilters%}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete {{user.username|capfirst}} post ?</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
-    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet"/>
-</head>
-<body class="bg-light">
-<div class="fw-bolder px-2">
-    <p class="fw-bolder mb-4 mt-5">ARE YOU SURE YOU WANT TO DELETE THIS POST ??</p>
-    <p class="fw-bolder mb-1">{{data.title|capfirst|safe}}</p>
-    <p class="lead mb-0">{{data.article|truncatechars_html:250|safe}}</p>
-</div>
 
-<section class="body2 py-5 px-5">
-    <form action="{%url 'delete' data.id %}" method="POST">
-        {%csrf_token%}
-        <div class="d-flex align-items-center">
-            <a href="{%url 'blog_detail' data.id%}" id="cancel">
-            <span class="btn btn-primary mx-1 d-flex align-items-center">
-                <label for="cancel">Cancel</label>
-                <i class="bi-x" style="color:#fff; font-size:16px;"></i>
-            </span>
-            </a>
-            <span class="btn btn-primary mx-1" style="background-color:red; border:red;">
-                <input type="submit" style="background-color:red; border:0; color:#fff;" name="confirm"
-                       value="Yes I want to">
-                <i class="bi-trash" style="color:#fff;"></i>
-            </span>
+{%block title%}Delete Post — Bloggarian{%endblock%}
+
+{%block extra_css%}
+<style>
+.ink-confirm-page {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+}
+
+.ink-confirm-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 520px;
+}
+
+.ink-confirm-icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(224,82,82,0.1);
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--danger);
+    margin-bottom: 24px;
+}
+
+.ink-confirm-card h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0 0 8px;
+}
+
+.ink-confirm-card .warning-text {
+    font-size: 14px;
+    color: var(--text-3);
+    margin: 0 0 28px;
+    line-height: 1.6;
+}
+
+.ink-post-preview {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px;
+    margin-bottom: 32px;
+}
+
+.ink-post-preview .post-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0 0 8px;
+}
+
+.ink-post-preview .post-excerpt {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ink-confirm-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="ink-confirm-page">
+    <div class="ink-confirm-card">
+        <div class="ink-confirm-icon">
+            <i class="bi bi-trash3"></i>
         </div>
 
-    </form>
-</section>
-</body>
-</html>
+        <h1>Delete this story?</h1>
+        <p class="warning-text">
+            This action cannot be undone. The story, all its comments, and episodes will be permanently removed.
+        </p>
+
+        <div class="ink-post-preview">
+            <div class="post-title">{{data.title|capfirst|safe}}</div>
+            <p class="post-excerpt">{{data.article|truncatechars_html:200|striptags}}</p>
+        </div>
+
+        <div class="ink-confirm-actions">
+            <form action="{%url 'delete' data.id %}" method="POST" style="margin:0;">
+                {%csrf_token%}
+                <button type="submit" class="ink-btn-danger">
+                    <i class="bi bi-trash3"></i> Yes, delete permanently
+                </button>
+            </form>
+            <a href="{%url 'blog_detail' data.id%}" class="ink-btn-outline">
+                <i class="bi bi-x"></i> Cancel
+            </a>
+        </div>
+    </div>
+</div>
+{%endblock%}

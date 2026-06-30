@@ -1,264 +1,368 @@
-<!DOCTYPE html>
 {%extends 'navs/nav.html' %}
-{%block content%}
 {%load myfilters%}
 {%load static%}
-<html>
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{%block title%}{{bios.user|capfirst}} — Bloggarian{%endblock%}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{%static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{%static 'assets/css/album.css' %}" rel="stylesheet">
-    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
-
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script>
-        var user_pk = {{bios.pk}}
-    </script>
-</head>
+{%block extra_css%}
 <style>
-.btn-icon-split {
-    padding: 0;
-    overflow: hidden;
-    display: inline-flex;
-    align-items: stretch;
+.ink-profile-wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px 60px;
+}
+
+/* Hero banner */
+.ink-profile-hero {
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 36px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.ink-profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--gold);
+    margin: 0 auto 16px;
+    display: block;
+}
+
+.ink-profile-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0 0 8px;
+}
+
+.ink-profile-bio {
+    font-size: 15px;
+    color: var(--text-3);
+    margin: 0 auto 24px;
+    max-width: 520px;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.ink-profile-actions {
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
-    .btn-icon-split .icon {
-    background: rgb(233 225 225 / 18%);
+
+.ink-follow-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+}
+
+.ink-follow-meta strong { color: var(--text-1); }
+
+/* Follow/Unfollow toggle button */
+.ink-follow-toggle {
+    padding: 7px 20px;
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.ink-follow-toggle:hover { background: var(--gold-d); }
+.ink-follow-toggle.unfollow {
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border-2);
+}
+.ink-follow-toggle.unfollow:hover { background: var(--bg-2); color: var(--danger); border-color: var(--danger); }
+
+.ink-share-link-btn {
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+.ink-share-link-btn:hover { background: var(--bg-2); color: var(--text-1); }
+
+/* Posts grid */
+.ink-posts-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-3);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.ink-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.ink-post-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+.ink-post-card:hover { border-color: var(--border-2); }
+
+.ink-post-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.ink-post-body {
+    padding: 16px;
+}
+
+.ink-post-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-1);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+.ink-post-title:hover { color: var(--gold); }
+
+.ink-post-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--text-3);
+}
+
+.ink-post-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* Pagination */
+.ink-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.ink-page-btn {
+    padding: 6px 14px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+.ink-page-btn:hover { background: var(--bg-2); color: var(--text-1); }
+.ink-page-info { font-size: 13px; color: var(--text-3); padding: 0 6px; }
+
+/* Share modal */
+.ink-share-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.ink-share-modal-inner {
+    background: var(--bg-1);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 40px 32px;
+    text-align: center;
+    min-width: 320px;
+    position: relative;
+}
+
+.ink-share-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-3);
+    line-height: 1;
+    transform: rotate(45deg);
+    transition: color 0.15s;
+}
+.ink-share-close:hover { color: var(--danger); }
+
+#mssg {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-top: 12px;
+}
+
+.ink-active-dot {
     display: inline-block;
-    padding: 0.375rem 0.75rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    margin-right: 4px;
+    animation: pulse 1.4s infinite;
 }
-.btn-icon-split .text {
-    display: inline-block;
-    padding: 0.375rem 0.75rem;
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.ink-empty-posts {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-3);
+    font-size: 15px;
 }
-
-
-
-        .bg-modal, .bg-modal2, .bg-modal3{
-        width:100%;
-        height:100%;
-        z-index:1;
-        background-color: rgb(0 0 0 / 96%)!important;
-        position:fixed;
-        left:0;
-        top:0;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        display:none;
-    }
-    .modal-content{
-        background: #4a4a4b00;
-        width:500px!important;
-        height:300px!important;
-        text-align: center!important;
-        position:relative;
-    }
-    .close{
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(45deg);
-        cursor:pointer!important;
-    }
-    .close:hover{
-        color:red;
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(19deg);
-        cursor:pointer!important;
-    }
-span#follow-count {
-    margin-left: 8rem !important;
-    margin-bottom: 1rem !important;
-}
-
 </style>
-<body class="bg-light h-100">
-<div class="card text-center px-5 py-5 bg-light" style="border:0px solid #fff">
-    <!--    <div class="card-header">-->
-    <!--        <small class="text-muted">Py|Quest...</small>-->
-    <!--    </div>-->
-    <div class="card-body bg-light">
-        <div class="d-flex justify-content-center align-items-center">
-            <img class="img-fluid rounded-circle" src="{{bios.display_photo.url}}" alt="..." width="150" height="250"
-                 style="width:18vh; height:16vh; object-fit:cover;">
-            {%if bios.user == request.user %}
-            <div class="mt-5 edit-bio position-absolute l-5 pl-5 ml-5">
-                <a class="btn btn-sm btn-secondary rounded">
-                    <i class="bi bi-person-edit"></i>
-                </a>
-            </div>
-            {%endif%}
-            <!--            <p>{{active}}</p>-->
-            {%if bios.user != request.user %}
-            {%if active %}
-                <div class="mt-5 edit-bio position-absolute l-5 pl-5 ml-5">
-                    <i class="bi bi-person-circle text-success"></i>
-                </div>
-                {%endif%}
-            {%endif%}
-        </div>
-        <div class="text-center">
-            <h5 class="card-title fw-bolder fs-5 my-2">{{bios.user|capfirst}}</h5>
-            {%if bios.description%}
-            <div class="fs-5 mb-4 fst-italic px-3 py-2">{{bios.description|capfirst}}</div>
-            {%else%}
-            {%if bios.user == request.user %}
-            <div class="fs-5 mb-4 fst-italic">Your Bio appears here when you add one</div>
-            {%else%}
-            <div class="fs-5 mb-4 fst-italic">{{bios.user}} hasn't written a bio yet.</div>
-            {%endif%}
-            {%endif%}
+{%endblock%}
 
+{%block content%}
+<script>var user_pk = {{bios.pk}};</script>
 
-        </div>
-        {%if bios.user == request.user %}
-        <a href="https://www.facebook.com/sharer/share.php?u={{request.build_absolute_uri}}{{stringed}}" class="btn btn-sm btn-dark btn-icon-split">
-                    <span class="icon text-white-50">
-                      <i class="bi bi-link"></i>
-                    </span>
-            <span class="text">Link</span>
+<div class="ink-profile-hero">
+    <img class="ink-profile-avatar" src="{{bios.display_photo.url}}" alt="{{bios.user}}">
+
+    <h1 class="ink-profile-name">
+        {{bios.user|capfirst}}
+        {%if active and bios.user != request.user%}
+        <span class="ink-active-dot" title="Online"></span>
+        {%endif%}
+    </h1>
+
+    {%if bios.description%}
+    <p class="ink-profile-bio">{{bios.description|capfirst}}</p>
+    {%elif bios.user == request.user%}
+    <p class="ink-profile-bio" style="color:var(--text-3);">Add a bio to tell readers about yourself.</p>
+    {%else%}
+    <p class="ink-profile-bio">{{bios.user}} hasn't written a bio yet.</p>
+    {%endif%}
+
+    <div class="ink-profile-actions">
+        {%if bios.user == request.user%}
+        <a href="https://www.facebook.com/sharer/share.php?u={{request.build_absolute_uri}}{{stringed}}" class="ink-share-link-btn" target="_blank">
+            <i class="bi bi-link-45deg"></i> Share profile
         </a>
-        <button class="btn btn-sm btn-dark btn-icon-split">
-                    <span class="icon text-white-50">
-                      <i class="bi bi-person"></i>
-                    </span>
-            <span class="text">following</span>
-            <span class="position-absolute rounded-circle bg-info px-1 ml-5" id="follow-count">
-                <small class="px-1">{{bios.following.all.count}}</small>
-            </span>
-        </button>
+        <div class="ink-follow-meta">
+            <i class="bi bi-people"></i>
+            Following <strong>{{bios.following.all.count}}</strong>
+        </div>
         {%else%}
         <form action="" method="POST" class="follow-form" id="{{bios.id}}">
             {%csrf_token%}
-            <input type="hidden" class="form-control lg-3" name="follow_id" value="{{bios.id}}">
-            <button class="btn btn-sm btn-dark btn-icon-split" onclick="followClick(this, '{{bios.user}}')">
-                {%if not follow%}
-                <span class="icon text-white-50">
-                              <i class="bi bi-person-plus" id="icon"></i>
-                            </span>
-                <span class="text follow-btn{{bios.id}}" id="span_text">
-                    Follow
-                </span>
-                    {%else%}
-                    <span class="icon text-white-50">
-                      <i class="bi bi-person-dash" id="icon"></i>
-                    </span>
-                    <span class="text follow-btn{{bios.id}}" id="span_text">
-                        Unfollow
-                        {%endif%}
-                    </span>
+            <input type="hidden" name="follow_id" value="{{bios.id}}">
+            {%if not follow%}
+            <button type="button" class="ink-follow-toggle" onclick="followClick(this, '{{bios.user}}')">
+                <i class="bi bi-person-plus"></i> Follow
             </button>
-
-            <!--            <button class="btn btn-sm btn-dark btn-icon-split unfollow-btn{{bios.id}}">-->
-            <!--                    <span class="icon text-white-50">-->
-            <!--                      <i class="fas fa-user-minus"></i>-->
-            <!--                    </span>-->
-            <!--                    <span class="text">Unfollow</span>-->
-            <!--                  </button>-->
+            {%else%}
+            <button type="button" class="ink-follow-toggle unfollow" onclick="followClick(this, '{{bios.user}}')">
+                <i class="bi bi-person-dash"></i> Unfollow
+            </button>
+            {%endif%}
         </form>
         {%endif%}
-        <!--        <div class="d-flex justify-content-center align-items-center mt-3">-->
-        <!--            <div class="info">-->
-        <!--                <h6 class="px-2"><b>Followers</b></h6>-->
-        <!--                <p class="text-muted">0</p>-->
-        <!--            </div>-->
-        <!--            <div class="info">-->
-        <!--                <h6 class="px-2"><b>Following</b></h6>-->
-        <!--                <p class="text-muted">{{bios.friend.all.count}}</p>-->
-        <!--            </div>-->
-        <!--            <div class="info">-->
-        <!--                <h6 class="px-2"><b>Posts</b></h6>-->
-        <!--                <p class="text-muted">{{posts.count}}</p>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </div>
-    <!--    <div class="card-footer text-muted">-->
-    <!--        2 days ago-->
-    <!--    </div>-->
 </div>
-<main role="main">
-    <div class="album py-5 bg-light border-top">
-        <div class="container">
 
-            <div class="row">
-                {%for post in blog%}
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <img src="{{post.image.url}}" alt="" class="img card-img-top" width="250" height="250" style="object-fit:cover;">
-                        <div class="card-body">
-                            <p class="card-text fw-bolder fs-5"><a href="{%url 'blog_detail' post.id%}"
-                                                                   class="stretched-link text-decoration-none"
-                                                                   style="color:#000;">{{post.title|capfirst}} <i
-                                    class="bi bi-eye text-muted"></i></a></p>
-                            <div class="d-flex">
-                                <p class="text-muted font-weight-bold"><i
-                                        class="bi bi-heart mx-1 text-muted font-weight-normal"></i>{{post.liked.all.count}}like{{post.liked.all|pluralize}}
-                                    <i class="bi bi-comments mx-1 text-muted font-weight-normal"></i>{{post.comments.count}}comment(s)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+<div class="ink-profile-wrap">
+    <div class="ink-posts-section-label">
+        Stories by {{bios.user|capfirst}}
+    </div>
+
+    {%if blog%}
+    <div class="ink-posts-grid">
+        {%for post in blog%}
+        <div class="ink-post-card">
+            <img src="{{post.image.url}}" alt="" class="ink-post-thumb">
+            <div class="ink-post-body">
+                <a href="{%url 'blog_detail' post.id%}" class="ink-post-title">{{post.title|capfirst}}</a>
+                <div class="ink-post-meta">
+                    <span><i class="bi bi-heart"></i> {{post.liked.all.count}}</span>
+                    <span><i class="bi bi-chat"></i> {{post.comments.count}}</span>
                 </div>
-                {%endfor%}
             </div>
         </div>
+        {%endfor%}
     </div>
-</main>
-{%if blog >= 1%}
-<div class="text-end mb-5 mb-xl-0 px-4">
-            <ul class="pagination">
-                {%if blog.has_previous%}
-                <li class="page-item">
-                    <a href="?page={{blog.previous_page_number }}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
-                       class="page-link text-decoration-none" aria-label="Previous">
-                        <i class="fas fa-angle-left text-warning"></i>
-                    </a>
-                </li>
-                {%endif%}
-                <li class="page-item">
-                    <span role="banner" class="page-link text-decoration-none" style="color:#777;">Page {{ blog.number }} of {{ blog.paginator.num_pages }}</span>
-                </li>
-                {%if blog.has_next%}
-                <li class="page-item">
-                    <a href="?page={{blog.next_page_number}}{%if request.GET.engine%}&engine={{request.GET.engine}}{%endif%}"
-                       class="page-link text-decoration-none" aria-label="Next">
-                        <i class="fas fa-angle-right text-warning"></i>
-                    </a>
-                </li>
-                {%endif%}
-            </ul>
-        </div>
-{%endif%}
-<div class="bg-modal2 rounded py-3 px-3" id="share-post">
-    <div class="modal-content py-2 px-3 border-0">
-        <div class="close text-light" onclick="cancelClicker(this)">+</div>
-        <i class="bi bi-person mb-5 text-light" style="font-size:210%; color:#757577;"></i>
-        <strong class="fw-bold text-light" id="mssg"></strong>
+
+    {%if blog.has_previous or blog.has_next%}
+    <div class="ink-pagination">
+        {%if blog.has_previous%}
+        <a href="?page={{blog.previous_page_number}}" class="ink-page-btn">
+            <i class="bi bi-chevron-left"></i> Prev
+        </a>
+        {%endif%}
+        <span class="ink-page-info">{{blog.number}} / {{blog.paginator.num_pages}}</span>
+        {%if blog.has_next%}
+        <a href="?page={{blog.next_page_number}}" class="ink-page-btn">
+            Next <i class="bi bi-chevron-right"></i>
+        </a>
+        {%endif%}
+    </div>
+    {%endif%}
+
+    {%else%}
+    <div class="ink-empty-posts">
+        <i class="bi bi-journal-text" style="font-size:40px; display:block; margin-bottom:14px;"></i>
+        No stories published yet.
+    </div>
+    {%endif%}
+</div>
+
+<!-- Share modal -->
+<div class="ink-share-modal bg-modal2" id="share-post">
+    <div class="ink-share-modal-inner">
+        <span class="ink-share-close" onclick="cancelClicker(this)">+</span>
+        <i class="bi bi-person-circle" style="font-size:48px; color:var(--gold);"></i>
+        <strong id="mssg"></strong>
     </div>
 </div>
-</body>
-</html>
 {%endblock%}
 
 {%block scripts%}
 <script src="{%static 'assets/js/scripts.js' %}"></script>
-<script>
-</script>
 <script src="{%static 'assets/js/follow_user.js' %}"></script>
-{%endblock scripts%}
-
-<!--TODO: publisher should be able to classify posts under a serie-->
+<script>
+    function cancelClicker(el) {
+        document.querySelector('.bg-modal2').style.display = 'none';
+    }
+</script>
+{%endblock%}

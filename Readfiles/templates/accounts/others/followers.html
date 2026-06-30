@@ -1,200 +1,173 @@
-<!doctype html>
 {%extends 'navs/nav.html' %}
-{%block content%}
 {%load static%}
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v4.1.1">
-    <title>{%block title%}Py|Quest... Followers{%endblock%}</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/offcanvas/">
+{%block title%}People — Bloggarian{%endblock%}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{%static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      #thelink{
-        text-decoration:none!important;
-      }
-      #thelink.clicked{
-        display:none;
-        text-decoration:none!important;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      @media (max-width: 992px) {
-        #search-but{
-            width:100% !important;
-        }
-      }
-
-
-
-
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="{%static 'assets/css/offcanvas.css' %}" rel="stylesheet">
-</head>
+{%block extra_css%}
 <style>
-    .media.text-muted.pt-3.d-flex.align-items-center.border-bottom.border-gray {
-    padding-inline: 11px 11px;
+.ink-people-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
 }
-    .bg-modal, .bg-modal2, .bg-modal3{
-        width:100%;
-        height:100%;
-        background-color: rgba(0, 0, 0, 0.7)!important;
-        position:absolute;
-        top:0;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-    }
-    .modal-content{
-        width:500px!important;
-        height:67px!important;
-        background:#fff;
-        text-align: center!important;
-        position:relative;
-    }
-    .close{
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(45deg);
-        cursor:pointer!important;
-    }
-    .close:hover{
-        color:red;
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(19deg);
-        cursor:pointer!important;
-    }
 
+.ink-people-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
 
+.ink-people-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0;
+}
 
+/* Search bar */
+.ink-people-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0 24px;
+}
 
+.ink-people-search-input {
+    flex: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 10px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.ink-people-search-input::placeholder { color: var(--text-3); }
+.ink-people-search-input:focus { border-color: var(--gold); }
+
+/* Person rows */
+.ink-person-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+}
+
+.ink-person-card:hover { background: transparent; }
+
+.ink-person-initial {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+}
+
+.ink-person-photo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-2);
+    flex-shrink: 0;
+}
+
+.ink-person-info { flex: 1; min-width: 0; }
+
+.ink-person-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-1);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ink-person-name:hover { color: var(--gold); }
+
+.ink-person-handle {
+    font-size: 13px;
+    color: var(--text-3);
+}
+
+.ink-follow-btn {
+    padding: 6px 16px;
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+.ink-follow-btn:hover { background: var(--gold-d); color: #0A0A0A; }
+
+.ink-empty-state {
+    padding: 60px 0;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 15px;
+}
+
+.ink-empty-state i { font-size: 40px; display: block; margin-bottom: 16px; color: var(--text-3); }
 </style>
-<body class="bg-light" style="padding-top:0;">
-<div class="nav-scroller bg-white shadow-sm my-1" style="">
-    <nav class="nav nav-underline">
-        <a class="nav-link active" href="#">Dashboard</a>
-        <a class="nav-link" href="#">
-            Friends
-            <span class="badge badge-pill bg-light align-text-bottom">27</span>
-        </a>
-        <a class="nav-link" href="#">Explore</a>
-        <a class="nav-link" href="#">Suggestions</a>
-    </nav>
-</div>
+{%endblock%}
 
-<main role="main" class="container">
-    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded shadow-sm">
-    <span class="py-1 mr-3">
-      <label for="people"></label>
-      <i class="bi-people-fill" id="people" style="font-size:20px;"></i>
-    </span>
-        <div class="lh-100">
-            <h6 class="mb-0 text-white lh-100">People you may like to follow</h6>
-            <small></small>
-        </div>
-        <button class="btn btn-outline-light btn-sm mx-2 my-2 my-sm-0" type="button" onclick="openClick(this)"><i
-                class="bi bi-search"></i></button>
-
-    </div>
-    <div class="w-50 container-sm bg-dark px-3 py-1 rounded d-none" id="search-but">
-        <div class="search my-2">
-            <form class="my-2 my-lg-0" method="get">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value="">
-            </form>
-        </div>
+{%block content%}
+<div class="ink-people-wrap">
+    <div class="ink-people-header">
+        <h1>People to Follow</h1>
     </div>
 
-    <div class="my-3 p-3 bg-white rounded shadow-sm">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Suggestions</h6>
-        {%if views%}
+    <div class="ink-people-search">
+        <form method="GET" style="flex:1; display:flex; gap:10px;">
+            <input type="search" class="ink-people-search-input" name="search"
+                   value="{{request.GET.search}}" placeholder="Search by name...">
+            <button type="submit" class="ink-btn" style="padding:10px 18px;">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+
+    {%if views%}
         {%for view in views%}
-        <div class="media text-muted pt-3">
-            <img src="{%static 'assets/images/profile.png'%}" class="img img-rounded" alt="" width="30" height="30">
-
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <a href="{%url 'u_profile' view.id%}" class="text-decoration-none">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <strong class="text-secondary">{{view.user}}</strong>
-                    </div>
-                </a>
-                <!--                <span class="d-block">{{view.username}}</span>-->
+        <div class="ink-person-card">
+            <div class="ink-person-initial">{{view.user|first|upper}}</div>
+            <div class="ink-person-info">
+                <a href="{%url 'u_profile' view.id%}" class="ink-person-name">{{view.user|capfirst}}</a>
+                <span class="ink-person-handle">@{{view.user}}</span>
             </div>
-
+            <a href="{%url 'u_profile' view.id%}" class="ink-follow-btn">
+                <i class="bi bi-person-plus" style="margin-right:5px;"></i> View
+            </a>
         </div>
         {%endfor%}
-        {%endif%}
-        <small class="d-block text-right mt-3">
-            <a href="#">All suggestions</a>
-        </small>
+    {%else%}
+    <div class="ink-empty-state">
+        <i class="bi bi-people"></i>
+        No people to show yet.
     </div>
-</main>
-<!--{%for message in messages%}-->
-<!--<div class="bg-modal2 rounded py-3 px-3" id="share">-->
-<!--    <div class="modal-content py-2 px-3">-->
-<!--        <div class="close" onclick="cancelClicker(this)">+</div>-->
-<!--        <div class="mt-3 d-flex justify-content-around align-items-center">-->
-<!--            <p>{{message|safe}}</p>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--{%endfor%}-->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    if(document.querySelector(".bg-modal2").style="display:flex !important;"){
-        document.querySelector(".nav-scroller").style="z-index:0 !important;"
-    }else{
-        document.querySelector(".nav-scroller").style="z-index:2 !important;"
-    }
-    function cancelClicker(element){
-        document.querySelector(".bg-modal2").style="display:none !important;"
-        document.querySelector(".nav-scroller").style="z-index:2 !important;"
-    }
-
-
-</script>
-<script>
-        function openClick(element){
-            var enlargeBtn = document.getElementById('search-but')
-            if (enlargeBtn.classList.contains('d-none')){
-                enlargeBtn.classList.remove('d-none');
-            }else{
-                enlargeBtn.classList.add('d-none');
-            }
-        }
-</script>
-<script src="{%static 'assets/js/offcanvas.js' %}"></script>
-<script>
-</script>
-</body>
-</html>
+    {%endif%}
+</div>
 {%endblock%}

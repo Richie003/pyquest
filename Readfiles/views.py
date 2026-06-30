@@ -11,6 +11,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 
+from django.db.models import Count
+
 from blog.models import BlogTag, BlogData
 from .decorators import unauthenticated_user, allowed_user
 from .forms import UserAdminCreationForm, BioForms, CategoryForm, SubscriptionForm
@@ -50,7 +52,6 @@ def register_view(request):
             instance.save()
             username = request.POST.get('username')
             password = request.POST.get('password1')
-            print('username:', username + 'password:', password)
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -82,7 +83,6 @@ def login_page(request):
             get_user.update(
                 active_user=True
             )
-            print(get_user_ip(request))
             request.session['member_id'] = username + '45'
             if "next" in request.POST:
                 return redirect(request.POST.get("next"))
@@ -134,24 +134,17 @@ def update_acct(request, pk):
 
 def my_followers(request):
     user = request.user
-    views = Bio.objects.all().exclude(user=user)
-    context = {
-        "views": views,
-        "user": user,
-    }
-
+    views = Bio.objects.select_related('user').exclude(user=user)
+    context = {"views": views, "user": user}
     return render(request, 'accounts/others/followers.html', context)
 
 
 def follow_user(request):
-    user = request.user
-    follow_id1 = request.POST.get('follow_id')
-    if request.method == "POST":
-        follow_id = request.POST.get('follow_id')
+    follow_id = request.POST.get('follow_id')
+    if request.method == 'POST':
+        user = request.user
         bio = Bio.objects.get(id=user.pk)
         users = User.objects.get(id=follow_id)
-        print(bio.friend.all())
-        print(user)
         if users in bio.friend.all():
             bio.friend.remove(follow_id)
         else:
@@ -159,12 +152,9 @@ def follow_user(request):
 
         follows, created = Follow.objects.get_or_create(follower=user, following_id=follow_id)
         if not created:
-            if follows.value == 'Follow':
-                follows.value = 'Unfollow'
-            elif follows.value == 'Unfollow':
-                follows.value = 'Follow'
-        follows.save()
-    return HttpResponseRedirect(reverse('u_profile', args=[str(follow_id1)]))
+            follows.value = 'Unfollow' if follows.value == 'Follow' else 'Follow'
+            follows.save(update_fields=['value'])
+    return HttpResponseRedirect(reverse('u_profile', args=[str(follow_id)]))
 
 
 def create_profile(request):
@@ -183,45 +173,29 @@ def create_profile(request):
 
 def user_profile(request, pk):
     user = request.user
-    bios = Bio.objects.get(pk=pk)
-    blog = BlogData.objects.filter(author=bios.user)
+    # Single query — removed duplicate Bio.objects.get(pk=pk)
+    bios = Bio.objects.select_related('user').prefetch_related('following').get(pk=pk)
+    blog = BlogData.objects.filter(author=bios.user).only('id', 'title', 'image', 'created')
     active = bios.active_user
-    me = Bio.objects.get(id=pk)
-    if bios.user in me.following.all():
-        follow = True
-    else:
-        follow = False
+    follow = bios.user in bios.following.all()  # uses prefetch cache
 
     if request.method == 'POST':
-        # ID = request.POST.get('follow_id')
-
-        if bios.user in me.following.all():
-            me.following.remove(bios.user)
+        if bios.user in bios.following.all():
+            bios.following.remove(bios.user)
         else:
-            me.following.add(bios.user)
+            bios.following.add(bios.user)
+        return JsonResponse({'following': bios.following.count()}, safe=False)
 
-        data = {
-            'following': me.following.all().count()
-        }
-        return JsonResponse(data, safe=False)
-        # return redirect(f'/user/profile/{pk}/')
-    # limit blog output to 3 with paginator
     paginator = Paginator(blog, 5)
     page = request.GET.get('page')
-    # page = paginator.get_page(page)
     try:
         blog = paginator.page(page)
     except PageNotAnInteger:
         blog = paginator.page(1)
     except EmptyPage:
         blog = paginator.page(paginator.num_pages)
-    print(active)
-    context = {
-        'bios': bios,
-        'blog': blog,
-        'active': active,
-        'follow': follow
-    }
+
+    context = {'bios': bios, 'blog': blog, 'active': active, 'follow': follow}
     return render(request, 'accounts/others/profile_card.html', context)
 
 
@@ -280,31 +254,38 @@ def publisher_cat(request):
 @allowed_user(allowed_roles=['Publisher'])
 @login_required(login_url='login')
 def stats(request):
-    data = BlogData.objects.all().filter(author=request.user)
-    # bios = Bio.objects.get(id=request.user.id)
     if request.method == 'POST':
         blog_ID = request.POST.get('blog_ID')
-        blog = BlogData.objects.get(id=blog_ID)
-        blog.delete()
+        BlogData.objects.filter(id=blog_ID).delete()
         return redirect('stats')
+
+    data = BlogData.objects.filter(author=request.user).prefetch_related('liked', 'comments', 'viewed')
+    # Compute real aggregates from the prefetch cache — no extra DB queries
+    data_list = list(data)
+    total_posts = len(data_list)
+    total_likes = sum(p.liked.count() for p in data_list)
+    total_comments = sum(p.comments.count() for p in data_list)
+    total_views = sum(p.viewed.count() for p in data_list)
     context = {
         'data': data,
-        # 'bios': bios
+        'total_posts': total_posts,
+        'total_likes': total_likes,
+        'total_comments': total_comments,
+        'total_views': total_views,
     }
-
     return render(request, 'admin/user_stats.html', context)
 
 
 def blog_csv(request):
-    blogs = BlogData.objects.all()
+    # annotate like_count to avoid N+1 (blog.liked.all().count() per row)
+    blogs = BlogData.objects.select_related('author').annotate(like_count=Count('liked'))
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename={request.user}-bloggarian.csv'
 
-    Writer = csv.writer(response)
-
-    Writer.writerow(['AUTHOR', 'TITLE', 'IMAGE', 'LIKES', 'CREATED'])
+    writer = csv.writer(response)
+    writer.writerow(['AUTHOR', 'TITLE', 'IMAGE', 'LIKES', 'CREATED'])
     for blog in blogs:
-        Writer.writerow([blog.author, blog.title, blog.image, blog.liked.all().count(), blog.created.date()])
+        writer.writerow([blog.author, blog.title, blog.image, blog.like_count, blog.created.date()])
 
     return response
 

@@ -1,705 +1,753 @@
-<!DOCTYPE html>
 {%extends 'navs/nav.html' %}
 {%load static%}
 {%load myfilters%}
-{%block content%}
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+{%block title%}Dashboard — Bloggarian{%endblock%}
 
-    <title>SB Admin 2 - Dashboard</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="{%static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{%static 'assets/css/sb-admin-2.min.css' %}" rel="stylesheet">
-
-</head>
+{%block extra_css%}
 <style>
-    div#illustrate {
-    max-height: 300px;
-    overflow: scroll;
-    overflow-x:hidden;
+.ink-dash {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 32px 24px 60px;
 }
-button.btn.btn-sm.btn-outline-dark.search-btn {
+
+/* Top action bar */
+.ink-dash-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.ink-dash-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0;
+}
+
+.ink-dash-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.ink-action-btn {
+    padding: 7px 14px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.ink-action-btn:hover { background: var(--bg-3); color: var(--text-1); }
+.ink-action-btn.gold { background: var(--gold); color: #0A0A0A; border-color: var(--gold); }
+.ink-action-btn.gold:hover { background: var(--gold-d); }
+
+/* Stat tiles */
+.ink-stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.ink-tile {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 20px 16px;
+}
+
+.ink-tile-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    margin-bottom: 8px;
+}
+
+.ink-tile-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1;
+}
+
+.ink-tile-icon {
+    font-size: 20px;
+    color: var(--text-3);
+    float: right;
+    margin-top: -30px;
+}
+
+/* Chart cards */
+.ink-chart-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 768px) { .ink-chart-row { grid-template-columns: 1fr; } }
+
+.ink-chart-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+}
+
+.ink-chart-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ink-chart-header h6 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ink-chart-body {
+    padding: 20px;
+    position: relative;
+}
+
+.ink-chart-body .chart-area { height: 260px; }
+.ink-chart-body .chart-pie { height: 200px; }
+
+.ink-pie-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-3);
+}
+
+.ink-pie-legend span { display: flex; align-items: center; gap: 5px; }
+
+/* Bottom row */
+.ink-bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 768px) { .ink-bottom-row { grid-template-columns: 1fr; } }
+
+/* Progress section */
+.ink-progress-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+}
+
+.ink-card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ink-card-body { padding: 20px; }
+
+.ink-prog-row { margin-bottom: 18px; }
+.ink-prog-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    margin-bottom: 6px;
+}
+.ink-prog-label span { color: var(--gold); font-size: 12px; }
+
+.ink-prog-bar {
+    height: 6px;
+    background: var(--bg-3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.ink-prog-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--gold);
+    transition: width 0.6s ease;
+}
+
+.ink-prog-fill.danger { background: var(--danger); }
+.ink-prog-fill.muted { background: var(--text-3); }
+
+/* Right column sub-cards */
+.ink-right-col { display: flex; flex-direction: column; gap: 16px; }
+
+/* Posts table */
+.ink-posts-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ink-posts-card::-webkit-scrollbar { width: 4px; }
+.ink-posts-card::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+.ink-mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.ink-mini-table th {
+    background: var(--bg-2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+}
+
+.ink-mini-table td {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    color: var(--text-2);
+    vertical-align: middle;
+}
+
+.ink-mini-table tr:hover td { background: var(--bg-2); }
+
+.ink-row-title {
+    font-weight: 600;
+    color: var(--text-1);
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ink-tbl-btn {
+    padding: 3px 8px;
+    border-radius: var(--r);
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+    cursor: pointer;
+    background: transparent;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: background 0.15s;
+}
+.ink-tbl-btn.share { color: var(--gold); border-color: var(--gold); }
+.ink-tbl-btn.share:hover { background: var(--gold-dim); }
+.ink-tbl-btn.del { color: var(--danger); border-color: rgba(224,82,82,0.3); }
+.ink-tbl-btn.del:hover { background: rgba(224,82,82,0.08); }
+
+/* Bio card */
+.ink-bio-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    text-align: center;
+}
+
+.ink-bio-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    margin: 24px auto 12px;
+    display: block;
+}
+
+.ink-bio-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 16px;
+}
+
+.ink-bio-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding-bottom: 24px;
+}
+
+/* Toggle switches */
+.ink-suggestions-card {
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+}
+
+.ink-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+}
+.ink-toggle-row:last-child { border-bottom: 0; }
+
+.ink-toggle-info { display: flex; align-items: center; gap: 10px; }
+.ink-toggle-info i { color: var(--gold); font-size: 15px; }
+.ink-toggle-info strong { font-size: 13px; font-weight: 600; color: var(--text-2); }
+
+.ink-toggle-switch {
+    width: 36px;
+    height: 20px;
+    background: var(--bg-3);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.ink-toggle-switch::after {
+    content: '';
     position: absolute;
-    top: 49px;
-    right: 21px;
-    border: 0px;
+    width: 14px;
+    height: 14px;
+    background: var(--text-3);
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s, background 0.2s;
 }
 
+.ink-toggle-switch.on { background: rgba(212,168,83,0.25); }
+.ink-toggle-switch.on::after { transform: translateX(16px); background: var(--gold); }
 
+/* Share modal */
+.ink-share-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
 
+.ink-share-modal-inner {
+    background: var(--bg-1);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 36px 32px;
+    text-align: center;
+    min-width: 320px;
+    position: relative;
+}
 
+.ink-share-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-3);
+    line-height: 1;
+    transform: rotate(45deg);
+    transition: color 0.15s;
+}
+.ink-share-close:hover { color: var(--danger); }
 
+.ink-share-socials {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
 
-
-
+.ink-share-socials a { font-size: 24px; color: var(--gold); transition: opacity 0.15s; }
+.ink-share-socials a:hover { opacity: 0.7; }
 </style>
-<style>
-        .bg-modal, .bg-modal2, .bg-modal3{
-        width:100%;
-        height:100%;
-        z-index:1;
-        background-color: rgba(0, 0, 0, 0.7)!important;
-        position:fixed;
-        left:0;
-        top:0;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        display:none;
-    }
-    .modal-content{
-        width:500px!important;
-        height:300px!important;
-        background:linear-gradient(to bottom, rgb(255 255 255 / 52%) 0%, rgb(255 255 255 / 86%) 100%),url(/static/images/background.png)no-repeat;
-        text-align: center!important;
-        position:relative;
-    }
-    .close{
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(45deg);
-        cursor:pointer!important;
-    }
-    .close:hover{
-        color:red;
-        position:absolute!important;
-        top:0!important;
-        right:14px;
-        font-size:41px;
-        transform:rotate(19deg);
-        cursor:pointer!important;
-    }
-</style>
-<body id="page-top">
-
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom my-3">
-    <!--    <h1 class="h2">Dashboard</h1>-->
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2 my-3">
-            <div class="together">
-                <a href="{%url 'blog_csv' %}" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="bi bi-download fa-sm text-white-50"></i> Generate Report</a>
-
-                <a class="d-sm-inline-block btn btn-sm btn-warning shadow-sm" id="my_post"
-                   style="color:#fff;"><i
-                        class="bi bi-book-open fa-sm text-white-50"></i> My posts</a>
-                <a href="#" class="d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
-                        class="bi bi-info-circle fa-sm text-white-50"></i> Others</a>
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                    <span data-feather="calendar" class="bi bi-calendar"></span>
-                    This week
-                </button>
-
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Page Wrapper -->
-<div id="wrapper">
-
-    <!-- Sidebar -->
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
-                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                </div>
-
-                <!-- Content Row -->
-                <div class="row">
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings
-                                            (Monthly)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings
-                                            (Annual)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                         aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending
-                                            Requests
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="bi bi-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content Row -->
-
-                <div class="row">
-
-                    <!-- Area Chart -->
-                    <div class="col-xl-8 col-lg-7">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-dark">Blog likes statistics</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="bi bi-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pie Chart -->
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content Row -->
-                <div class="row">
-
-                    <!-- Content Column -->
-                    <div class="col-lg-6 mb-4">
-
-                        <!-- Project Card Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Services</h6>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="small font-weight-bold">AD's reached <span class="float-right">20%</span>
-                                </h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                         aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Blog ratings <span class="float-right">40%</span>
-                                </h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Customer Database <span
-                                        class="float-right">60%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60"
-                                         aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span>
-                                </h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                {%if request.user.category == 'None'%}
-                                <h4 class="small font-weight-bold">Account Setup <span
-                                        class="float-right">90%</span></h4>
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 90%"
-                                         aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                {%else%}
-                                <h4 class="small font-weight-bold">Account Setup <span
-                                        class="float-right">Complete!</span></h4>
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                {%endif%}
-                            </div>
-                        </div>
-
-                        <!-- Color System -->
-                        <div class="row">
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-dark text-white shadow">
-                                    <div class="card-body">
-                                        Dark
-                                        <div class="text-white-50 small">#5a5c69</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4" id="illustrate">
-                            <div class="card-header py-3 text-center">
-                                <h6 class="m-0 font-weight-bold text-dark"></h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center blod">
-                                    <div class="my-1 p-3 bg-white rounded shadow-sm">
-                                        <h6 class="border-bottom border-gray pb-2 mb-0">Posts</h6>
-                                        {%if data%}
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Gender</th>
-                                                        <th>Subject</th>
-                                                        <th>Class</th>
-                                                        <th>Contact Info</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Gender</th>
-                                                        <th>Subject</th>
-                                                        <th>Class</th>
-                                                        <th>Contact Info</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-                                                {%for data in data%}
-                                                <tr id="{{data.id}}">
-                                                    <td>{{data.title}}</td>
-                                                    <td>{{data.description}}</td>
-                                                    <td>{{data.liked.count}}</td>
-                                                    <td>{{data.created}}</td>
-                                                    <td>{{data.updated}}</td>
-                                                    <td id="button-{{data.id}}">
-                                                        <button type="button" class="btn btn-sm btn-outline-warning mx-2" id="share" onclick="shareClick(this, '{{obj.id}}')"><i class="fas fa-share-alt"></i></button>
-                                                        <form action="" method="POST">
-                                                            {%csrf_token%}
-                                                            <input type="hidden" id="blog_id" name="blog_ID"
-                                                                value="{{obj.id}}">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                                    id="trash"><i class="fas fa-trash"></i></button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                                {%endfor%}
-                                                </tbody>
-                                            </table>
-                                            </div>
-                                        </div>
-                                        {%else%}
-                                        <h5 class="text-muted mt-4">
-                                            <b>No posts yet...</b>
-                                        </h5>
-                                        {%endif%}
-                                        <small class="d-block text-right mt-3">
-                                            <a href="#">All suggestions</a>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Approach -->
-
-                        </div>
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">My Bio</h6>
-                            </div>
-                            <div class="card-body text-center">
-                                <div class="text-center px-2">
-                                    <img class="img-fluid rounded-circle px-3 px-sm-4 mt-3 mb-4"
-                                        src="{%static 'assets/images/profile.png' %}" alt="" width="150" height="150">
-                                </div>
-                                <p class="text-dark font-weight-bolder">{{request.user}}</p>
-                                <p>
-                                    <a href="{%url 'profile' request.user.pk%}" class="btn btn-sm btn-outline-success my-2 text-success" id="secrets"><i
-                                            class="fas fa-user-edit"></i></a>
-                                    <button class="btn btn-sm btn-outline-warning my-2" id="secret"><i
-                                            class="fas fa-share-alt"></i></button>
-                                    <button class="btn btn-sm btn-outline-info"><i
-                                            class="fas fa-caret-down"></i></button>
-                                </p>
-<!--                                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw →</a>-->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <!-- End of Footer -->
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-
-</div>
-<div class="container bg-info rounded px-3 py-3">
-    <div class="my-3 p-3 bg-white rounded shadow-sm">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Suggestions</h6>
-
-
-        <div class="media text-muted pt-3">
-            <div class="icon">
-                <i class="fas fa-tools fw-bolder"></i>
-            </div>
-
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray ml-3">
-                <div class="text-decoration-none">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <strong class="text-gray-dark">Auto-generate report</strong>
-                        <span class="border rounded bg-secondary text-left" style="width:32px; height:21px;" id="cont1"><i class="fas fa-circle fw-bold" id="icn1" style="color:white;" onclick="shiftClick1(this)"></i></span>
-                    </div>
-                </div>
-<!--                <span class="d-block"></span>-->
-            </div>
-
-        </div>
-
-        <div class="media text-muted pt-3">
-            <div class="icon">
-                <i class="fas fa-piggy-bank fw-bolder"></i>
-            </div>
-
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray ml-3">
-                <div class="text-decoration-none">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <strong class="text-gray-dark">Save 2% of my onion-curr weekly</strong>
-                        <span class="border rounded bg-secondary text-left" style="width:32px; height:21px;" id="cont"><i class="fas fa-circle fw-bold text-light"  id="icn" onclick="shiftClick(this)"></i></span>
-                    </div>
-                </div>
-<!--                <span class="d-block"></span>-->
-            </div>
-
-        </div>
-
-
-        <small class="d-block text-right mt-3">
-            <a href="#">All suggestions</a>
-        </small>
-    </div>
-</div>
-<div class="bg-modal2 rounded py-3 px-3" id="share-post">
-    <div class="modal-content py-2 px-3 bg-light">
-        <div class="close" onclick="cancelClicker(this)">+</div>
-        <i class="fas fa-share-alt" style="font-size:210%; color:#757577;"></i>
-        <div class="mt-5 d-flex justify-content-around align-items-center" style="line-height: 10;">
-            <a href="" class="socials text-decoration-none text-" id="socials"><i class="fas fa-link text-warning" style="font-size:210%;"></i></a>
-            <a href="" class="socials text-decoration-none text-" id="socials-f"><i class="fas fa-blog text-warning" style="font-size:210%;"></i></a>
-            <a href="" class="socials text-decoration-none text-" id="socials-i"><i class="fas fa-link text-warning" style="font-size:210%;"></i></a>
-        </div>
-    </div>
-</div>
-</body>
-
-</html>
 {%endblock%}
+
+{%block content%}
+<div class="ink-dash">
+
+    <!-- Top bar -->
+    <div class="ink-dash-topbar">
+        <h1 class="ink-dash-title">Publisher Dashboard</h1>
+        <div class="ink-dash-actions">
+            <a href="{%url 'blog_csv' %}" class="ink-action-btn gold">
+                <i class="bi bi-download"></i> Export report
+            </a>
+            <button class="ink-action-btn" id="my_post">
+                <i class="bi bi-book-open"></i> My posts
+            </button>
+        </div>
+    </div>
+
+    <!-- Stat tiles -->
+    <div class="ink-stat-row">
+        <div class="ink-tile">
+            <div class="ink-tile-label">Stories published</div>
+            <div class="ink-tile-value">{{total_posts}} <i class="bi bi-journal-text ink-tile-icon"></i></div>
+        </div>
+        <div class="ink-tile">
+            <div class="ink-tile-label">Total likes</div>
+            <div class="ink-tile-value">{{total_likes}} <i class="bi bi-heart ink-tile-icon"></i></div>
+        </div>
+        <div class="ink-tile">
+            <div class="ink-tile-label">Total comments</div>
+            <div class="ink-tile-value">{{total_comments}} <i class="bi bi-chat ink-tile-icon"></i></div>
+        </div>
+        <div class="ink-tile">
+            <div class="ink-tile-label">Total views</div>
+            <div class="ink-tile-value">{{total_views}} <i class="bi bi-eye ink-tile-icon"></i></div>
+        </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="ink-chart-row">
+        <div class="ink-chart-card">
+            <div class="ink-chart-header">
+                <h6>Blog likes statistics</h6>
+            </div>
+            <div class="ink-chart-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="ink-chart-card">
+            <div class="ink-chart-header">
+                <h6>Content breakdown</h6>
+            </div>
+            <div class="ink-chart-body">
+                <div class="chart-pie">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+                <div class="ink-pie-legend">
+                    <span><i class="bi bi-circle-fill" style="color:#D4A853;"></i> Likes</span>
+                    <span><i class="bi bi-circle-fill" style="color:#9C988F;"></i> Comments</span>
+                    <span><i class="bi bi-circle-fill" style="color:#5C5956;"></i> Views</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom content row -->
+    <div class="ink-bottom-row">
+
+        <!-- Real engagement metrics -->
+        <div class="ink-progress-card">
+            <div class="ink-card-header">Engagement</div>
+            <div class="ink-card-body">
+
+                {%if total_views > 0%}
+                {% with like_pct=total_likes|floatformat:0 %}
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">
+                        Like rate (likes ÷ views)
+                        <span>{{total_likes}} / {{total_views}}</span>
+                    </div>
+                    <div class="ink-prog-bar">
+                        <div class="ink-prog-fill" style="width:{% widthratio total_likes total_views 100 %}%"></div>
+                    </div>
+                </div>
+                {% endwith %}
+                {%else%}
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">Like rate <span>—</span></div>
+                    <div class="ink-prog-bar"><div class="ink-prog-fill" style="width:0%"></div></div>
+                </div>
+                {%endif%}
+
+                {%if total_posts > 0%}
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">
+                        Avg. likes per post
+                        <span>{{total_likes}} / {{total_posts}}</span>
+                    </div>
+                    <div class="ink-prog-bar">
+                        <div class="ink-prog-fill" style="width:{% widthratio total_likes total_posts 100 %}%; max-width:100%;"></div>
+                    </div>
+                </div>
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">
+                        Avg. comments per post
+                        <span>{{total_comments}} / {{total_posts}}</span>
+                    </div>
+                    <div class="ink-prog-bar">
+                        <div class="ink-prog-fill" style="width:{% widthratio total_comments total_posts 100 %}%; max-width:100%; background:var(--text-2);"></div>
+                    </div>
+                </div>
+                {%endif%}
+
+                {%if request.user.category == 'None'%}
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">Account setup <span>90%</span></div>
+                    <div class="ink-prog-bar"><div class="ink-prog-fill" style="width:90%;"></div></div>
+                </div>
+                {%else%}
+                <div class="ink-prog-row">
+                    <div class="ink-prog-label">Account setup <span style="color:var(--gold);">Complete</span></div>
+                    <div class="ink-prog-bar"><div class="ink-prog-fill" style="width:100%;"></div></div>
+                </div>
+                {%endif%}
+
+            </div>
+        </div>
+
+        <!-- Right: posts table + bio + suggestions -->
+        <div class="ink-right-col">
+
+            <!-- Posts table -->
+            <div class="ink-posts-card" id="illustrate">
+                <div class="ink-card-header">Posts</div>
+                {%if data%}
+                <table class="ink-mini-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Likes</th>
+                            <th>Created</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for data in data%}
+                        <tr id="{{data.id}}">
+                            <td class="ink-row-title" title="{{data.title}}">{{data.title|capfirst}}</td>
+                            <td>{{data.liked.count}}</td>
+                            <td style="white-space:nowrap; font-size:12px;">{{data.created|date:"M j, Y"}}</td>
+                            <td style="white-space:nowrap;">
+                                <button type="button" class="ink-tbl-btn share" onclick="shareClick(this, '{{data.id}}')">
+                                    <i class="bi bi-share"></i>
+                                </button>
+                                <form action="" method="POST" style="display:inline; margin-left:4px;">
+                                    {%csrf_token%}
+                                    <input type="hidden" id="blog_id" name="blog_ID" value="{{data.id}}">
+                                    <button type="submit" class="ink-tbl-btn del" id="trash">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                {%else%}
+                <div style="padding:36px; text-align:center; color:var(--text-3); font-size:14px;">
+                    <i class="bi bi-journal-text" style="font-size:32px; display:block; margin-bottom:10px;"></i>
+                    No posts yet.
+                </div>
+                {%endif%}
+            </div>
+
+            <!-- Bio card -->
+            <div class="ink-bio-card">
+                <img class="ink-bio-avatar" src="{%static 'assets/images/profile.png' %}" alt="">
+                <div class="ink-bio-name">{{request.user}}</div>
+                <div class="ink-bio-actions">
+                    <a href="{%url 'profile' request.user.pk%}" class="ink-action-btn" id="secrets">
+                        <i class="bi bi-person-gear"></i> Edit profile
+                    </a>
+                    <button class="ink-action-btn" id="secret">
+                        <i class="bi bi-share"></i> Share
+                    </button>
+                </div>
+            </div>
+
+            <!-- Suggestions toggles -->
+            <div class="ink-suggestions-card">
+                <div class="ink-card-header">Suggestions</div>
+                <div class="ink-toggle-row">
+                    <div class="ink-toggle-info">
+                        <i class="bi bi-tools"></i>
+                        <strong>Auto-generate report</strong>
+                    </div>
+                    <div class="ink-toggle-switch" id="cont1" onclick="shiftClick1(this)"></div>
+                </div>
+                <div class="ink-toggle-row">
+                    <div class="ink-toggle-info">
+                        <i class="bi bi-piggy-bank"></i>
+                        <strong>Save 2% of earnings weekly</strong>
+                    </div>
+                    <div class="ink-toggle-switch" id="cont" onclick="shiftClick(this)"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Share modal -->
+<div class="ink-share-modal bg-modal2" id="share-post">
+    <div class="ink-share-modal-inner">
+        <span class="ink-share-close" onclick="cancelClicker(this)">+</span>
+        <i class="bi bi-share" style="font-size:40px; color:var(--gold);"></i>
+        <div class="ink-share-socials">
+            <a href="" id="socials"><i class="bi bi-facebook"></i></a>
+            <a href="" id="socials-f"><i class="bi bi-rss"></i></a>
+            <a href="" id="socials-i"><i class="bi bi-link-45deg"></i></a>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
 {%block scripts%}
-<!-- Bootstrap core JavaScript-->
-<script src="{%static 'assets/vendor/jquery/jquery.min.js' %}"></script>
-<script src="{%static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="{%static 'assets/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="{%static 'assets/js/sb-admin-2.min.js' %}"></script>
-
-<!-- Page level plugins -->
 <script src="{%static 'assets/vendor/chart.js/Chart.min.js' %}"></script>
-
-<!-- Page level custom scripts -->
-<script src="{%static 'assets/js/demo/chart-area-demo.js' %}"></script>
-<script src="{%static 'assets/js/demo/chart-pie-demo.js' %}"></script>
 <script>
-    var myPost = document.getElementById('my_post')
-    var delPost = document.getElementById('trash')
-    var blogID = document.getElementById('blog_id')
-    var myIllure = document.getElementById('illustrate')
+    var myPost = document.getElementById('my_post');
+    var myIllure = document.getElementById('illustrate');
 
-myPost.addEventListener('click', ()=> {
-    myIllure.style = 'transform: translateY(-500px); transition: 2s ease-in-out;'
-})
-
-var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-    labels: [{%for titles in data%}'{{titles.title}}',{%endfor%}],
-    datasets: [{
-        label: "No. of likes",
-        lineTension: 0.3,
-        backgroundColor: "rgb(90 92 105/ 10%)",
-        borderColor: "rgb(90 92 105)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgb(90 92 105)",
-        pointBorderColor: "rgb(90 92 105)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgb(90 92 105/ 100%)",
-        pointHoverBorderColor: "rgb(90 92 105/ 50%)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [{%for likes in data%}{{likes.liked.all.count}},{%endfor%}],
-    }],
-},
-options: {
-    maintainAspectRatio: false,
-    layout: {
-        padding: {
-        left: 10,
-        right: 25,
-        top: 25,
-        bottom: 0
-      }
-    },
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'date'
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        ticks: {
-          maxTicksLimit: 7
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          maxTicksLimit: 4,
-          padding: 10,
-          // Include a dollar sign in the ticks
-          callback: function(value, index, values) {
-            return '' + number_format(value);
-          }
-        },
-        gridLines: {
-          color: "rgb(234, 236, 244)",
-          zeroLineColor: "rgb(234, 236, 244)",
-          drawBorder: false,
-          borderDash: [2],
-          zeroLineBorderDash: [2]
-        }
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: '#6e707e',
-      titleFontSize: 14,
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: 'index',
-      caretPadding: 10,
-      callbacks: {
-        label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
-        }
-      }
+    if (myPost && myIllure) {
+        myPost.addEventListener('click', function() {
+            myIllure.style.cssText = 'transform: translateY(-500px); transition: 2s ease-in-out;';
+        });
     }
-  }
-});
+
+    /* Area chart */
+    var ctx = document.getElementById("myAreaChart");
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{%for titles in data%}'{{titles.title}}',{%endfor%}],
+                datasets: [{
+                    label: "No. of likes",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(212,168,83,0.08)",
+                    borderColor: "rgba(212,168,83,0.9)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(212,168,83,1)",
+                    pointBorderColor: "rgba(212,168,83,1)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(212,168,83,1)",
+                    pointHoverBorderColor: "rgba(212,168,83,0.5)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [{%for likes in data%}{{likes.liked.all.count}},{%endfor%}],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: { padding: { left: 10, right: 25, top: 25, bottom: 0 } },
+                scales: {
+                    xAxes: [{
+                        time: { unit: 'date' },
+                        gridLines: { display: false, drawBorder: false },
+                        ticks: { maxTicksLimit: 7, fontColor: '#5C5956' }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            maxTicksLimit: 4,
+                            padding: 10,
+                            fontColor: '#5C5956',
+                            callback: function(value) { return value; }
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.04)",
+                            zeroLineColor: "rgba(255,255,255,0.04)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }]
+                },
+                legend: { display: false },
+                tooltips: {
+                    backgroundColor: "#1C1C1C",
+                    bodyFontColor: "#9C988F",
+                    titleFontColor: "#F2EDE7",
+                    titleFontSize: 13,
+                    borderColor: '#2E2E2E',
+                    borderWidth: 1,
+                    xPadding: 12,
+                    yPadding: 12,
+                    displayColors: false,
+                    intersect: false,
+                    mode: 'index',
+                    caretPadding: 8,
+                }
+            }
+        });
+    }
+
+    /* Pie chart — real engagement breakdown */
+    var ctx2 = document.getElementById("myPieChart");
+    if (ctx2) {
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ["Likes", "Comments", "Views"],
+                datasets: [{
+                    data: [{{total_likes}}, {{total_comments}}, {{total_views}}],
+                    backgroundColor: ['#D4A853', '#9C988F', '#5C5956'],
+                    hoverBorderColor: "transparent"
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutoutPercentage: 72,
+                legend: { display: false },
+                tooltips: {
+                    backgroundColor: "#1C1C1C",
+                    bodyFontColor: "#9C988F",
+                    borderColor: '#2E2E2E',
+                    borderWidth: 1,
+                    xPadding: 12,
+                    yPadding: 12,
+                    displayColors: false,
+                }
+            }
+        });
+    }
 </script>
 <script>
-    function shareClick(element, ID){
-        const titleTag = document.getElementById(ID)
-        var socialTag = document.getElementById('socials')
-        var objectTag = titleTag.innerHTML
-        console.log(objectTag)
-        document.querySelector(".bg-modal2").style="display:flex!important;"
-        socialTag.href= 'https://www.facebook.com/sharer/share.php?u=http://127.0.0.1:8001/blog/'+ID+'/'+objectTag;
-    }
-    function cancelClicker(element){
-        document.querySelector(".bg-modal2").style="display:none!important;"
-    }
-    function shiftClick(element){
-        var contTag = document.getElementById('cont')
-        var iconTag = document.getElementById('icn')
-        if (contTag.classList.contains('text-left')){
-            contTag.classList.remove('text-left');
-            contTag.classList.add('text-right');
-            contTag.style = 'background-color:#36b9cc !important; width:32px; height:21px;'
-        }else{
-            contTag.classList.remove('text-right');
-            contTag.classList.add('text-left');
-            contTag.style = 'background-color:rgb(133 135 150) !important; width:32px; height:21px;'
+    function shareClick(element, ID) {
+        var socialTag = document.getElementById('socials');
+        if (socialTag) {
+            socialTag.href = 'https://www.facebook.com/sharer/share.php?u=http://127.0.0.1:8001/blog/' + ID + '/';
         }
+        document.querySelector('.bg-modal2').style.display = 'flex';
     }
 
-        function shiftClick1(element){
-        var contTag = document.getElementById('cont1')
-        var iconTag = document.getElementById('icn1')
-        if (contTag.classList.contains('text-left')){
-            contTag.classList.remove('text-left');
-            contTag.classList.add('text-right');
-            contTag.style = 'background-color:#36b9cc !important; width:32px; height:21px;'
-        }else{
-            contTag.classList.remove('text-right');
-            contTag.classList.add('text-left');
-            contTag.style = 'background-color:rgb(133 135 150) !important; width:32px; height:21px;'
-        }
+    function cancelClicker(element) {
+        document.querySelector('.bg-modal2').style.display = 'none';
+    }
+
+    function shiftClick(element) {
+        element.classList.toggle('on');
+    }
+
+    function shiftClick1(element) {
+        element.classList.toggle('on');
     }
 </script>
 {%endblock%}

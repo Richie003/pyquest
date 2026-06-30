@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from ckeditor.fields import RichTextField
 from django.utils.timezone import now
 
 
@@ -20,8 +19,7 @@ class BlogData(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     title = models.CharField(default='', max_length=100, null=True, blank=True)
     description = models.CharField(default='', max_length=200, blank=True, null=True)
-    # article = models.TextField(default='', max_length=7000, null=False, blank=False, )
-    article = RichTextField(blank=True, null=True)
+    article = models.TextField(blank=True, null=True)
     image = models.ImageField(default='profile1.jpg', blank=True, null=True,
                                 upload_to='blog_img/')
     liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', default='', blank=True)
@@ -43,7 +41,7 @@ class BlogData(models.Model):
     
     @property
     def get_comments(self):
-        return Comment.objects.filter(id=self.id)
+        return Comment.objects.filter(blog_id=self.id)
     
     @property
     def get_episodes(self):
@@ -76,7 +74,7 @@ class Comment(models.Model):
 class Episode(models.Model):
     linked_to = models.ForeignKey(BlogData, null=True, default=1, on_delete=models.SET_NULL, blank=True)
     title = models.CharField(default='', max_length=100, null=True, blank=True)
-    article = RichTextField(blank=True, null=True)
+    article = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_created=True, auto_now_add=True, editable=True)
     updated = models.DateTimeField(default=now)
     

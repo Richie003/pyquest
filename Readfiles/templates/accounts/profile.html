@@ -1,74 +1,188 @@
-<!doctype html>
+{%extends 'navs/nav.html'%}
 {%load static%}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
 
-    <!--Bootstrap CSS-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!--Custom CSS-->
-    <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet">
-    <link href="{%static 'assets/css/grid.css' %}" rel="stylesheet">
+{%block title%}Edit Profile — Bloggarian{%endblock%}
 
-</head>
+{%block extra_css%}
 <style>
-</style>
-<body class="bg-light">
-<div class="container px-5 my-5">
-    <div class="row gx-5">
-        <div class="bg-light col-md-6 themed-grid-col">
-            <div class="px-2 py-2">
-                <div id="alert-box my-5">Images appear here . . .</div>
-                <div id="image-box"></div>
-            </div>
-        </div>
-        <div class="bg-dark col-md-6 themed-grid-col">
-            <form action="" id="image-form" method="POST">
-                {%csrf_token%}
-                <div class="form-floating">{{form.display_photo}}</div>
-                <div class="floating-form">{{form.description}}</div>
-                <div class="floating-form">{{form.user}}</div>
+.ink-profile-edit-page {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 52px 24px 60px;
+}
 
-                <button class="btn btn-outline-light mt-3 not-visible" id="confirm-btn" type="submit">Update</button>
-            </form>
+.ink-profile-edit-wrap {
+    width: 100%;
+    max-width: 560px;
+}
+
+.ink-profile-edit-header {
+    margin-bottom: 36px;
+}
+
+.ink-profile-edit-header .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.ink-profile-edit-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0;
+}
+
+/* Photo preview */
+.ink-photo-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    margin-bottom: 28px;
+}
+
+#image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    display: block;
+}
+
+.ink-photo-info strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+}
+
+.ink-photo-info span {
+    font-size: 13px;
+    color: var(--text-3);
+    display: block;
+    margin-bottom: 10px;
+}
+
+#id_display_photo {
+    color: var(--text-2);
+    font-size: 13px;
+}
+
+::-webkit-file-upload-button {
+    background: var(--bg-3);
+    color: var(--text-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 5px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.ink-pf-field { margin-bottom: 18px; }
+
+.ink-pf-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 7px;
+}
+
+.ink-pf-field textarea {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 11px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: var(--text-1);
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.15s;
+}
+.ink-pf-field textarea::placeholder { color: var(--text-3); }
+.ink-pf-field textarea:focus { border-color: var(--gold); }
+
+/* Hide the user select field */
+#id_user { display: none; }
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="ink-profile-edit-page">
+    <div class="ink-profile-edit-wrap">
+        <div class="ink-profile-edit-header">
+            <div class="eyebrow">Your account</div>
+            <h1>Edit Profile</h1>
         </div>
+
+        <form id="profile-form" action="" method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+
+            <div class="ink-photo-upload">
+                <div>
+                    <img id="image" src="{%static 'assets/images/profile.png' %}" alt="Profile photo">
+                </div>
+                <div class="ink-photo-info">
+                    <strong>Profile photo</strong>
+                    <span>Recommended: square image, at least 200×200px</span>
+                    {{form.display_photo}}
+                </div>
+            </div>
+
+            <div class="ink-pf-field">
+                <label>Bio</label>
+                {{form.description}}
+            </div>
+
+            {{form.user}}
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:24px;">
+                <button type="submit" class="ink-btn" id="confirm-btn" style="display:none;">
+                    <i class="bi bi-check-lg"></i> Save Profile
+                </button>
+                <a href="javascript:history.back()" class="ink-btn-outline">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
+{%endblock%}
+
+{%block scripts%}
 <script>
-    const alertBox= document.getElementById('alert-box')
-    const imageBox= document.getElementById('image-box')
-    const imageForm= document.getElementById('image-form')
-    const confirmBtn= document.getElementById('confirm-btn')
-    const input= document.getElementById('id_display_photo')
-    const csrf= document.getElementsByName('csrfmiddlewaretoken')
+    var input = document.getElementById('id_display_photo');
+    var imagePreview = document.getElementById('image');
+    var confirmBtn = document.getElementById('confirm-btn');
 
-    input.addEventListener('change', ()=>{
-        console.log('changed')
-        const img_data = input.files[0]
-        const url = URL.createObjectURL(img_data)
-        imageBox.innerHTML = `<img src="${url}" id="image" class="img-fluid rounded-circle" width="450px" height="250px" style="height:359px !important; object-fit:fill;">`
-        document.querySelector('#alert-box').style = "display:none;"
-    })
+    if (input) {
+        input.addEventListener('change', function() {
+            var imgData = input.files[0];
+            var url = URL.createObjectURL(imgData);
+            imagePreview.src = url;
+            confirmBtn.style.display = 'inline-flex';
+        });
+    }
 
-	var form_fields = document.getElementsByTagName('input')
-	const select_fields = document.getElementById('id_user')
-<!--		form_fields[1].value='';-->
-<!--		form_fields[2].placeholder='What Do You Do?..';-->
-<!--		form_fields[3].placeholder='Bio..';-->
-
-
-	for (var field in form_fields){
-	    form_fields[2].className += ' form-control py-3 mt-3'
-	    form_fields[3].className += ' form-control py-3 mt-3'
-	}
-	select_fields.style = 'display:none;'
-
-
+    /* Style the description textarea */
+    var desc = document.getElementById('id_description');
+    if (desc) {
+        desc.placeholder = 'Tell readers about yourself...';
+    }
 </script>
-</body>
-</html>
+{%endblock%}

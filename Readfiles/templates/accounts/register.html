@@ -1,150 +1,280 @@
-<!DOCTYPE html>
+{%extends 'navs/nav.html'%}
 {%load static%}
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content />
-        <meta name="author" content />
-        <title>Sign-up</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="{%static 'assets/css/styles.css' %}" rel="stylesheet" />
-        <script>
-        var user = '{{request.user}}'
 
-        function getCookie(name){
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== ''){
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++){
-                    var cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')){
-                        cookieValue = decodeURIComponent(cookie.substring(
-                            name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
+{%block title%}Join Bloggarian — Sign up{%endblock%}
 
-    </script>
-    </head>
-    <style>
-        .btn-primary {
-        color: #fff;
-        background-color: #777;
-        border-color: #777;
-    }
-    .btn-primary:hover{
-        background-color: #777;
-        border-color: #777;
-    }
-    </style>
-    <body class="d-flex flex-column">
-        <main class="flex-shrink-0">
-            <!-- Page content-->
-            <section class="py-5">
-                <div class="container px-5">
-                    <!-- Contact form-->
-                    <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
-                        <div class="text-center mb-5">
-                            <h1 class="fw-bolder">Sign-Up</h1>
-                            <p class="lead fw-normal text-muted mb-0">Your data remains private . . .</p>
-                        </div>
-                        <div class="row gx-5 justify-content-center">
-                            <div class="col-lg-8 col-xl-6">
-                                <!-- * * * * * * * * * * * * * * *-->
-                                <!-- * * SB Forms Contact Form * *-->
-                                <!-- * * * * * * * * * * * * * * *-->
-                                <!-- This form is pre-integrated with SB Forms.-->
-                                <!-- To make this form functional, sign up at-->
-                                <!-- https://startbootstrap.com/solution/contact-forms-->
-                                <!-- to get an API token!-->
-                                <form id="contactForm" enctype="multipart/form-data" method="POST" data-sb-form-api-token="API_TOKEN">
-                                    {%csrf_token%}
-                                    <!-- Name input-->
-                                    <div class="form-floating mb-3">
-                                        {{form.first_name}}
-                                        <label for="name">First name</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.last_name}}
-                                        <label for="lastname">Last name</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.email}}
-                                        <label for="email">Email</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.username}}
-                                        <label for="username">Username</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.tel}}
-                                        <label for="name">Phone number</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.password1}}
-                                        <label for="name">Password</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        {{form.password2}}
-                                        <label for="name">Re-enter Password</label>
-                                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                    </div>
-                                    <!-- Submit Button-->
-                                    <div class="d-grid"><button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
-                                </form>
-                                <p class="py-3">Already signed up? <a href="{%url 'login' %}">login</a></p>
-                            </div>
-                        </div>
+{%block extra_css%}
+<style>
+.ink-auth-split {
+    min-height: calc(100vh - var(--nav-h));
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.ink-auth-panel {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 52px 48px 60px;
+    overflow-y: auto;
+}
+
+.ink-auth-aside {
+    background: var(--bg-1);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 48px;
+    position: sticky;
+    top: var(--nav-h);
+    height: calc(100vh - var(--nav-h));
+}
+
+.ink-auth-aside-big {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 24px;
+}
+
+.ink-perks { list-style: none; padding: 0; margin: 0 0 36px; }
+
+.ink-perks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-2);
+}
+
+.ink-perks li i { color: var(--gold); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+.ink-perks li strong { display: block; color: var(--text-1); font-size: 14px; margin-bottom: 2px; }
+
+.ink-auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding-top: 8px;
+}
+
+.ink-auth-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+
+.ink-auth-card h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0 0 4px;
+}
+
+.ink-auth-card .subtitle {
+    font-size: 14px;
+    color: var(--text-3);
+    margin: 0 0 32px;
+}
+
+.ink-auth-field { margin-bottom: 14px; }
+
+.ink-auth-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 6px;
+}
+
+.ink-auth-field input {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--border-2);
+    border-radius: var(--r);
+    padding: 11px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.ink-auth-field input::placeholder { color: var(--text-3); }
+.ink-auth-field input:focus { border-color: var(--gold); }
+
+.ink-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.ink-auth-submit {
+    width: 100%;
+    padding: 13px;
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 8px;
+}
+.ink-auth-submit:hover { background: var(--gold-d); }
+
+.ink-auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--text-3);
+    text-align: center;
+}
+
+.ink-auth-footer a { color: var(--gold); }
+.ink-auth-footer a:hover { color: var(--gold-d); }
+
+.ink-form-errors {
+    background: rgba(224,82,82,0.08);
+    border: 1px solid rgba(224,82,82,0.2);
+    border-radius: var(--r);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--danger);
+}
+
+/* Make Django's form inputs match */
+.ink-auth-field input[type=email],
+.ink-auth-field input[type=text],
+.ink-auth-field input[type=tel],
+.ink-auth-field input[type=password] {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .ink-auth-split { grid-template-columns: 1fr; }
+    .ink-auth-aside { display: none; }
+    .ink-auth-panel { padding: 36px 24px 48px; }
+    .ink-row2 { grid-template-columns: 1fr; }
+}
+</style>
+{%endblock%}
+
+{%block content%}
+<div class="ink-auth-split">
+
+    <div class="ink-auth-panel">
+        <div class="ink-auth-card">
+            <div class="ink-auth-eyebrow">Create account</div>
+            <h1>Join Bloggarian</h1>
+            <p class="subtitle">Your data remains private. Always.</p>
+
+            {%if form.errors%}
+            <div class="ink-form-errors">
+                Please fix the errors below before continuing.
+            </div>
+            {%endif%}
+
+            <form id="register-form" method="POST" action="" enctype="multipart/form-data">
+                {%csrf_token%}
+
+                <div class="ink-row2">
+                    <div class="ink-auth-field">
+                        <label for="id_first_name">First name</label>
+                        {{form.first_name}}
+                    </div>
+                    <div class="ink-auth-field">
+                        <label for="id_last_name">Last name</label>
+                        {{form.last_name}}
                     </div>
                 </div>
-            </section>
-        </main>
-        <!-- Footer-->
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <!-- * *                               SB Forms JS                               * *-->
-        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-    <script>
-    						/* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
-		//We start indexing at one because CSRF_token is considered an input field
-		 */
 
-		//Query All input fields
-		var form_fields = document.getElementsByTagName('input')
-		form_fields[1].placeholder='Firstname..';
-		form_fields[2].placeholder='Lastname..';
-		form_fields[3].placeholder='Username..';
-		form_fields[4].placeholder='Email..';
-		form_fields[5].placeholder='Phone Number..';
-		form_fields[6].placeholder='Enter password...';
-		form_fields[7].placeholder='Re-enter Password...';
+                <div class="ink-auth-field">
+                    <label for="id_email">Email</label>
+                    {{form.email}}
+                </div>
 
+                <div class="ink-auth-field">
+                    <label for="id_username">Username</label>
+                    {{form.username}}
+                </div>
 
-		for (var field in form_fields){
-			form_fields[field].className += ' form-control'
-		}
+                <div class="ink-auth-field">
+                    <label for="id_tel">Phone number</label>
+                    {{form.tel}}
+                </div>
 
+                <div class="ink-auth-field">
+                    <label for="id_password1">Password</label>
+                    {{form.password1}}
+                </div>
+
+                <div class="ink-auth-field">
+                    <label for="id_password2">Confirm password</label>
+                    {{form.password2}}
+                </div>
+
+                <button type="submit" class="ink-auth-submit">Create account</button>
+            </form>
+
+            <div class="ink-auth-footer">
+                Already have an account? <a href="{%url 'login' %}">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ink-auth-aside">
+        <div class="ink-auth-aside-big">Why Bloggarian</div>
+        <ul class="ink-perks">
+            <li>
+                <i class="bi bi-pen"></i>
+                <div>
+                    <strong>Publish your ideas</strong>
+                    Rich text editor, episode series, image uploads — everything a writer needs.
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-people"></i>
+                <div>
+                    <strong>Build your audience</strong>
+                    Followers, engagement stats, and share tools built in from day one.
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-bar-chart-line"></i>
+                <div>
+                    <strong>Track your impact</strong>
+                    Real-time likes, views, and comment analytics on your dashboard.
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-shield-check"></i>
+                <div>
+                    <strong>Private by default</strong>
+                    No selling your data. No ads unless you opt in. That's the deal.
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+{%endblock%}
+
+{%block scripts%}
+<script>
+    /* Apply dark ink styling to Django-rendered form inputs */
+    var fields = document.querySelectorAll('#register-form input[type=text], #register-form input[type=email], #register-form input[type=tel], #register-form input[type=password]');
+    fields.forEach(function(el) {
+        el.className = '';
+        el.style.cssText = 'width:100%;background:var(--bg-2);border:1px solid var(--border-2);border-radius:var(--r);padding:11px 14px;font-family:Space Grotesk,sans-serif;font-size:15px;color:var(--text-1);outline:none;display:block;';
+        el.addEventListener('focus', function(){ this.style.borderColor='var(--gold)'; });
+        el.addEventListener('blur', function(){ this.style.borderColor='var(--border-2)'; });
+    });
 </script>
-
-    </body>
-</html>
+{%endblock%}
